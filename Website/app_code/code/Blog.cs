@@ -12,7 +12,6 @@ public static class Blog
 {
     static Blog()
     {
-        Theme = ConfigurationManager.AppSettings.Get("blog:theme");
         Title = ConfigurationManager.AppSettings.Get("blog:name");
         Description = ConfigurationManager.AppSettings.Get("blog:description");
         PostsPerPage = int.Parse(ConfigurationManager.AppSettings.Get("blog:postsPerPage"));
@@ -22,9 +21,18 @@ public static class Blog
         BlogPath = ConfigurationManager.AppSettings.Get("blog:path");
     }
 
+    public static string Theme 
+    {
+        get
+        {
+            return HttpContext.Current.User.Identity.IsAuthenticated
+                ? ConfigurationManager.AppSettings.Get("blog:authenticated:theme")
+                : ConfigurationManager.AppSettings.Get("blog:theme");
+        }
+    }
+
     public static string Title { get; private set; }
     public static string Description { get; private set; }
-    public static string Theme { get; private set; }
     public static string Image { get; private set; }
     public static int PostsPerPage { get; private set; }
     public static int DaysToComment { get; private set; }
