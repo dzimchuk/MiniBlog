@@ -28,9 +28,8 @@ public class MinifyHandler : IHttpHandler
         response.ContentType = ext == ".css" ? "text/css" : "text/javascript";
 
         response.Cache.SetLastModified(File.GetLastWriteTimeUtc(file));
-        response.Cache.SetValidUntilExpires(true);
-        response.Cache.SetExpires(DateTime.Now.AddYears(1));
-        response.Cache.SetCacheability(HttpCacheability.ServerAndPrivate);
+        response.Cache.SetCacheability(HttpCacheability.Public);
+        response.Cache.SetMaxAge(TimeSpan.FromDays(365));
         response.Cache.SetVaryByCustom("Accept-Encoding");
         
         response.AddCacheDependency(new CacheDependency(file));

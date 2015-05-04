@@ -220,10 +220,9 @@ public static class Blog
             if (!File.Exists(absolute))
                 throw new FileNotFoundException("File not found", absolute);
 
-            DateTime date = File.GetLastWriteTime(absolute);
-            int index = relative.LastIndexOf('.');
+            var date = File.GetLastWriteTime(absolute);
 
-            string result = ConfigurationManager.AppSettings.Get("blog:cdnUrl") + relative.Insert(index, "_" + date.Ticks);
+            var result = string.Format("{0}{1}?v={2}", ConfigurationManager.AppSettings["blog:cdnUrl"], relative, date.Ticks);
 
             HttpRuntime.Cache.Insert(rootRelativePath, result, new CacheDependency(absolute));
         }
