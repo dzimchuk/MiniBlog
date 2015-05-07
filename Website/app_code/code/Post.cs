@@ -13,7 +13,7 @@ public class Post
     {
         ID = Guid.NewGuid().ToString();
         Title = "My new post";
-        Author = HttpContext.Current.User.Identity.Name;
+        Author = ConfigurationManager.AppSettings["blog:author"];
         Content = "the content";
         PubDate = DateTime.UtcNow;
         LastModified = DateTime.UtcNow;

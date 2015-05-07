@@ -49,6 +49,9 @@ public class MetaWeblogHandler : XmlRpcService, IMetaWeblog
 
         post.Slug = PostHandler.CreateSlug(post.Title);
         post.IsPublished = publish;
+
+        post.Author = ConfigurationManager.AppSettings["blog:author"];
+
         Storage.Save(post);
 
         return post.ID;
