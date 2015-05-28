@@ -30,8 +30,6 @@ namespace BlogIndexer
 
         private static void IndexPosts(IndexerArgs args)
         {
-            System.Diagnostics.Debugger.Launch();
-
             var loader = new PostLoader(args.PostDirectory);
             var posts = loader.LoadPosts();
 
@@ -64,9 +62,9 @@ namespace BlogIndexer
                                  Fields = new List<Field>
                                           {
                                               new Field("Id", DataType.String) { IsKey = true },
-                                              new Field("Title", DataType.String, AnalyzerName.EnLucene) { IsSearchable = true },
-                                              new Field("Content", DataType.String, AnalyzerName.EnLucene) { IsSearchable = true },
-                                              new Field("Categories", DataType.Collection(DataType.String), AnalyzerName.EnLucene) { IsSearchable = true },
+                                              new Field("Title", DataType.String, AnalyzerName.EnLucene) { IsSearchable = true, IsRetrievable = false },
+                                              new Field("Content", DataType.String, AnalyzerName.EnLucene) { IsSearchable = true, IsRetrievable = false },
+                                              new Field("Categories", DataType.Collection(DataType.String), AnalyzerName.EnLucene) { IsSearchable = true, IsRetrievable = false },
                                               new Field("IsPublished", DataType.Boolean) { IsFilterable = true, IsRetrievable = false },
                                               new Field("PubDate", DataType.DateTimeOffset) { IsFilterable = true, IsRetrievable = false },
                                           }
