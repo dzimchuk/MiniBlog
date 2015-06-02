@@ -79,38 +79,12 @@ public class Post
         return (Blog.ModerateComments && !context.User.Identity.IsAuthenticated) ? this.Comments.Count(c => c.IsApproved) : this.Comments.Count;
     }
 
-    public bool HasTeaser
-    {
-        get { return GetTeaserMarkerIndex(Content) != -1; }
-    }
-
-    public string GetHtmlTeaser()
-    {
-        var result = GetTeaser(Content);
-        result = HandleYoutube(result);
-        result = HandleImageCDN(result);
-
-        return result;
-    }
-
     public string GetHtmlContent()
     {
         var result = HandleYoutube(Content);
-        result = HandleImageCDN(result);
+        result = HandleImageCdn(result);
 
         return result;
-    }
-
-    private static string GetTeaser(string content)
-    {
-        var index = GetTeaserMarkerIndex(content);
-        return index == -1 ? content : content.Substring(0, index);
-    }
-
-    private static int GetTeaserMarkerIndex(string content)
-    {
-        const string teaserMarker = "<!--more-->";
-        return content.IndexOf(teaserMarker, StringComparison.OrdinalIgnoreCase);
     }
 
     private static string HandleYoutube(string content)
@@ -120,7 +94,7 @@ public class Post
         return Regex.Replace(content, @"\[youtube:(.*?)\]", (Match m) => string.Format(video, m.Groups[1].Value));
     }
 
-    private static string HandleImageCDN(string content)
+    private static string HandleImageCdn(string content)
     {
         // Images replaced by CDN paths if they are located in the /posts/ folder
         var cdn = ConfigurationManager.AppSettings.Get("blog:cdnUrl");

@@ -53,6 +53,7 @@ public class MetaWeblogHandler : XmlRpcService, IMetaWeblog
         post.Author = ConfigurationManager.AppSettings["blog:author"];
 
         Storage.Save(post);
+        SearchFacade.Index(post);
 
         return post.ID;
     }
@@ -73,6 +74,7 @@ public class MetaWeblogHandler : XmlRpcService, IMetaWeblog
             match.IsPublished = publish;
 
             Storage.Save(match);
+            SearchFacade.Index(post);
         }
 
         return match != null;
@@ -87,6 +89,7 @@ public class MetaWeblogHandler : XmlRpcService, IMetaWeblog
         if (post != null)
         {
             Storage.Delete(post);
+            SearchFacade.Delete(postid);
         }
 
         return post != null;
