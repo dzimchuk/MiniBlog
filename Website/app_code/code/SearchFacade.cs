@@ -6,14 +6,16 @@ using Microsoft.Azure.Search;
 using Microsoft.Azure.Search.Models;
 using Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling;
 
-internal static class SearchFacade
+public static class SearchFacade
 {
     public static IList<SearchResult> Search(string searchText)
     {
         var parameters = new SearchParameters
         {
             SearchMode = SearchMode.All,
-            HighlightFields = new List<string> { "Title", "Content" },
+            HighlightFields = new List<string> { "Content" },
+            HighlightPreTag = "<b>",
+            HighlightPostTag = "</b>",
             Filter = "IsPublished eq true"
         };
 
