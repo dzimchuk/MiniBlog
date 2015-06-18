@@ -23,6 +23,20 @@ public static class SearchFacade
         return result.StatusCode != HttpStatusCode.OK ? null : result.Results;
     }
 
+    public static IList<SuggestResult> Suggest(string searchText)
+    {
+        var parameters = new SuggestParameters
+                         {
+                             UseFuzzyMatching = true,
+                             HighlightPreTag = "<b>",
+                             HighlightPostTag = "</b>",
+                             Filter = "IsPublished eq true"
+                         };
+
+        var result = IndexClient.Documents.Suggest(searchText, "sg", parameters);
+        return result.StatusCode != HttpStatusCode.OK ? null : result.Results;
+    }
+
     public static void Index(Post post)
     {
         var document = new Document

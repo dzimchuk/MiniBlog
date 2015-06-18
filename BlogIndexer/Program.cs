@@ -56,18 +56,26 @@ namespace BlogIndexer
         {
             Console.WriteLine("Creating index {0}...", indexName);
 
+            var suggester = new Suggester
+                            {
+                                Name = "sg",
+                                SearchMode = SuggesterSearchMode.AnalyzingInfixMatching,
+                                SourceFields = new List<string> { "Title", "Categories" }
+                            };
+
             var definition = new Index
                              {
                                  Name = indexName,
                                  Fields = new List<Field>
                                           {
                                               new Field("Id", DataType.String) { IsKey = true },
-                                              new Field("Title", DataType.String, AnalyzerName.EnLucene) { IsSearchable = true, IsRetrievable = false },
+                                              new Field("Title", DataType.String) { IsSearchable = true, IsRetrievable = false },
                                               new Field("Content", DataType.String, AnalyzerName.EnLucene) { IsSearchable = true, IsRetrievable = false },
-                                              new Field("Categories", DataType.Collection(DataType.String), AnalyzerName.EnLucene) { IsSearchable = true, IsRetrievable = false },
+                                              new Field("Categories", DataType.Collection(DataType.String)) { IsSearchable = true, IsRetrievable = false },
                                               new Field("IsPublished", DataType.Boolean) { IsFilterable = true, IsRetrievable = false },
                                               new Field("PubDate", DataType.DateTimeOffset) { IsFilterable = true, IsRetrievable = false },
-                                          }
+                                          },
+                                 Suggesters = new List<Suggester> { suggester }
                              };
 
             client.Indexes.Create(definition);
