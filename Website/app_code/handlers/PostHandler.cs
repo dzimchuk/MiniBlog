@@ -37,6 +37,7 @@ public class PostHandler : IHttpHandler
             throw new HttpException(404, "The post does not exist");
 
         Storage.Delete(post);
+        SearchFacade.Delete(id);
     }
 
     private void EditPost(string id, string title, string excerpt, string content, bool isPublished, string[] categories)
@@ -60,6 +61,8 @@ public class PostHandler : IHttpHandler
 
         post.IsPublished = isPublished;
         Storage.Save(post);
+
+        SearchFacade.Index(post);
     }
 
     private void SaveFilesToDisk(Post post)
