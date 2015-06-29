@@ -184,9 +184,6 @@ public static class Blog
 
         File.WriteAllBytes(file, bytes);
 
-        var cruncher = new ImageCruncher.Cruncher();
-        cruncher.CrunchImages(file);
-
         return VirtualPathUtility.ToAbsolute(relative);
     }
 
