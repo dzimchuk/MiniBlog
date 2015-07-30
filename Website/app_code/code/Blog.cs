@@ -8,6 +8,8 @@ using System.Web;
 using System.Web.Caching;
 using System.Web.Helpers;
 using System.Web.Hosting;
+using Microsoft.Practices.ServiceLocation;
+using MiniBlog.Contracts;
 
 public static class Blog
 {
@@ -171,20 +173,8 @@ public static class Blog
 
     public static string SaveFileToDisk(byte[] bytes, string extension)
     {
-        string relative = "~/posts/files/" + Guid.NewGuid();
-
-        if (string.IsNullOrWhiteSpace(extension))
-            extension = ".bin";
-        else
-            extension = "." + extension.Trim('.');
-
-        relative += extension;
-
-        string file = HostingEnvironment.MapPath(relative);
-
-        File.WriteAllBytes(file, bytes);
-
-        return VirtualPathUtility.ToAbsolute(relative);
+        var fileStorage = ServiceLocator.Current.GetInstance<IFileStorage>();
+        return fileStorage.Save(bytes, extension);
     }
 
     public static string GetPagingUrl(int move)

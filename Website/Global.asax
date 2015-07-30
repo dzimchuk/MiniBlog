@@ -1,4 +1,7 @@
 ﻿<%@ Application Language="C#" %>
+<%@ Import Namespace="LightInject" %>
+<%@ Import Namespace="LightInject.ServiceLocation" %>
+<%@ Import Namespace="Microsoft.Practices.ServiceLocation" %>
 
 <script RunAt="server">
 
@@ -13,6 +16,14 @@
         }
 
         return base.GetVaryByCustomString(context, arg);
+    }
+
+    public void Application_Start(object sender, EventArgs e)
+    {
+        var container = new ServiceContainer();
+        container.RegisterFrom<CompositionModule>();
+
+        ServiceLocator.SetLocatorProvider(() => new LightInjectServiceLocator(container));
     }
 
     public void Application_BeginRequest(object sender, EventArgs e)
@@ -32,7 +43,7 @@
         var request = HttpContext.Current.Request;
         var exception = Server.GetLastError() as HttpException;
         if (exception == null) return;
-        
+
         //Prevents customError behavior when the request is determined to be an AJAX request.
         if (request["X-Requested-With"] == "XMLHttpRequest" || request.Headers["X-Requested-With"] == "XMLHttpRequest")
         {
@@ -43,5 +54,5 @@
             Response.Write(string.Format("<html><body><h1>{0} {1}</h1></body></html>", exception.GetHttpCode(), exception.Message));
         }
     }
-       
+
 </script>
