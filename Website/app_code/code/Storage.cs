@@ -8,7 +8,13 @@ using System.Xml.XPath;
 
 public static class Storage
 {
-    private static string _folder = HostingEnvironment.MapPath("~/posts/");
+    private static readonly string Folder = HostingEnvironment.MapPath("~/posts/");
+
+    private static readonly List<string> IgnoreList = new List<string>
+                                                      {
+                                                          "9fa751db-c036-435b-97e3-bd6373b0991b.xml",
+                                                          "a5e4d75a-6629-4942-aba3-8ed020d933f4.xml"
+                                                      };
 
     public static List<Post> GetAllPosts()
     {
@@ -25,7 +31,7 @@ public static class Storage
     // Can this be done async?
     public static void Save(Post post)
     {
-        string file = Path.Combine(_folder, post.ID + ".xml");
+        string file = Path.Combine(Folder, post.ID + ".xml");
         post.LastModified = DateTime.UtcNow;
 
         XDocument doc = new XDocument(
@@ -84,7 +90,7 @@ public static class Storage
     public static void Delete(Post post)
     {
         var posts = GetAllPosts();
-        string file = Path.Combine(_folder, post.ID + ".xml");
+        string file = Path.Combine(Folder, post.ID + ".xml");
         File.Delete(file);
         posts.Remove(post);
         Blog.ClearStartPageCache();
@@ -92,14 +98,17 @@ public static class Storage
 
     private static void LoadPosts()
     {
-        if (!Directory.Exists(_folder))
-            Directory.CreateDirectory(_folder);
+        if (!Directory.Exists(Folder))
+            Directory.CreateDirectory(Folder);
 
         List<Post> list = new List<Post>();
 
         // Can this be done in parallel to speed it up?
-        foreach (string file in Directory.EnumerateFiles(_folder, "*.xml", SearchOption.TopDirectoryOnly))
+        foreach (string file in Directory.EnumerateFiles(Folder, "*.xml", SearchOption.TopDirectoryOnly))
         {
+            if (IgnoreList.Contains(Path.GetFileName(file)))
+                continue;
+
             XElement doc = XElement.Load(file);
 
             Post post = new Post()
