@@ -22,6 +22,7 @@
     {
         var container = new ServiceContainer();
         container.RegisterFrom<CompositionModule>();
+        container.RegisterFrom<MiniBlog.Azure.Composition.CompositionModule>();
 
         ServiceLocator.SetLocatorProvider(() => new LightInjectServiceLocator(container));
     }
