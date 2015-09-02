@@ -40,8 +40,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IPostStorage.cs" />
     <Compile Include="IConfiguration.cs" />
     <Compile Include="IFileStorage.cs" />
+    <Compile Include="Model\Comment.cs" />
+    <Compile Include="Model\Post.cs" />
+    <Compile Include="PostSerializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

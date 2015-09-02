@@ -1,14 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Security.Policy;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
+using Microsoft.Practices.ServiceLocation;
+using Util;
 
 public class PostHandler : IHttpHandler
 {
+    private readonly IStorageAdapter storage = ServiceLocator.Current.GetInstance<IStorageAdapter>();
+
     public void ProcessRequest(HttpContext context)
     {
         Blog.ValidateToken(context);
@@ -31,18 +31,18 @@ public class PostHandler : IHttpHandler
 
     private void DeletePost(string id)
     {
-        Post post = Storage.GetAllPosts().FirstOrDefault(p => p.ID == id);
+        Post post = storage.GetAllPosts().FirstOrDefault(p => p.ID == id);
 
         if (post == null)
             throw new HttpException(404, "The post does not exist");
 
-        Storage.Delete(post);
+        storage.Delete(post);
         SearchFacade.Delete(id);
     }
 
     private void EditPost(string id, string title, string excerpt, string content, bool isPublished, string[] categories)
     {
-        Post post = Storage.GetAllPosts().FirstOrDefault(p => p.ID == id);
+        Post post = storage.GetAllPosts().FirstOrDefault(p => p.ID == id);
 
         if (post != null)
         {
@@ -60,7 +60,7 @@ public class PostHandler : IHttpHandler
         SaveFilesToDisk(post);
 
         post.IsPublished = isPublished;
-        Storage.Save(post);
+        storage.Save(post);
 
         SearchFacade.Index(post);
     }
@@ -103,45 +103,13 @@ public class PostHandler : IHttpHandler
         return Convert.FromBase64String(base64.Substring(index));
     }
 
-    public static string CreateSlug(string title)
+    private string CreateSlug(string title)
     {
-        title = title.ToLowerInvariant().Replace(" ", "-");
-        title = RemoveDiacritics(title);
-        title = RemoveReservedUrlCharacters(title);
-
-        if (Storage.GetAllPosts().Any(p => string.Equals(p.Slug, title, StringComparison.OrdinalIgnoreCase)))
+        var slug = Slug.Create(title);
+        if (storage.GetAllPosts().Any(p => string.Equals(p.Slug, title, StringComparison.OrdinalIgnoreCase)))
             throw new HttpException(409, "Already in use");
 
-        return title.ToLowerInvariant();
-    }
-
-    static string RemoveReservedUrlCharacters(string text)
-    {
-        var reservedCharacters = new List<string>() { "!", "#", "$", "&", "'", "(", ")", "*", ",", "/", ":", ";", "=", "?", "@", "[", "]", "\"", "%", ".", "<", ">", "\\", "^", "_", "'", "{", "}", "|", "~", "`", "+" };
-
-        foreach (var chr in reservedCharacters)
-        {
-            text = text.Replace(chr, "");
-        }
-
-        return text;
-    }
-
-    static string RemoveDiacritics(string text)
-    {
-        var normalizedString = text.Normalize(NormalizationForm.FormD);
-        var stringBuilder = new StringBuilder();
-
-        foreach (var c in normalizedString)
-        {
-            var unicodeCategory = CharUnicodeInfo.GetUnicodeCategory(c);
-            if (unicodeCategory != UnicodeCategory.NonSpacingMark)
-            {
-                stringBuilder.Append(c);
-            }
-        }
-
-        return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
+        return slug;
     }
 
     public bool IsReusable

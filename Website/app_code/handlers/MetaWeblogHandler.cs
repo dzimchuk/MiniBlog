@@ -1,9 +1,13 @@
-﻿using CookComputing.XmlRpc;
+﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Linq;
+using System.Web;
 using System.Web.Security;
+using CookComputing.XmlRpc;
+using Microsoft.Practices.ServiceLocation;
+using Util;
 
 public interface IMetaWeblog
 {
@@ -43,24 +47,26 @@ public interface IMetaWeblog
 
 public class MetaWeblogHandler : XmlRpcService, IMetaWeblog
 {
+    private readonly IStorageAdapter storage = ServiceLocator.Current.GetInstance<IStorageAdapter>();
+
     string IMetaWeblog.AddPost(string blogid, string username, string password, Post post, bool publish)
     {
         ValidateUser(username, password);
 
         if (!string.IsNullOrWhiteSpace(post.Slug))
         {
-            post.Slug = PostHandler.CreateSlug(post.Slug);
+            post.Slug = CreateSlug(post.Slug);
         }
         else
         {
-            post.Slug = PostHandler.CreateSlug(post.Title);    
+            post.Slug = CreateSlug(post.Title);    
         }
         
         post.IsPublished = publish;
 
         post.Author = ConfigurationManager.AppSettings["blog:author"];
 
-        Storage.Save(post);
+        storage.Save(post);
         SearchFacade.Index(post);
 
         return post.ID;
@@ -70,18 +76,18 @@ public class MetaWeblogHandler : XmlRpcService, IMetaWeblog
     {
         ValidateUser(username, password);
 
-        Post match = Storage.GetAllPosts().FirstOrDefault(p => p.ID == postid);
+        Post match = storage.GetAllPosts().FirstOrDefault(p => p.ID == postid);
 
         if (match != null)
         {
             match.Title = post.Title;
             match.Excerpt = post.Excerpt;
             match.Content = post.Content;
-            match.Slug = PostHandler.CreateSlug(post.Slug);
+            match.Slug = CreateSlug(post.Slug);
             match.Categories = post.Categories;
             match.IsPublished = publish;
 
-            Storage.Save(match);
+            storage.Save(match);
             SearchFacade.Index(post);
         }
 
@@ -92,11 +98,11 @@ public class MetaWeblogHandler : XmlRpcService, IMetaWeblog
     {
         ValidateUser(username, password);
 
-        Post post = Storage.GetAllPosts().FirstOrDefault(p => p.ID == postid);
+        Post post = storage.GetAllPosts().FirstOrDefault(p => p.ID == postid);
 
         if (post != null)
         {
-            Storage.Delete(post);
+            storage.Delete(post);
             SearchFacade.Delete(postid);
         }
 
@@ -107,7 +113,7 @@ public class MetaWeblogHandler : XmlRpcService, IMetaWeblog
     {
         ValidateUser(username, password);
 
-        Post post = Storage.GetAllPosts().FirstOrDefault(p => p.ID == postid);
+        Post post = storage.GetAllPosts().FirstOrDefault(p => p.ID == postid);
 
         if (post == null)
             throw new XmlRpcFaultException(0, "Post does not exist");
@@ -129,7 +135,7 @@ public class MetaWeblogHandler : XmlRpcService, IMetaWeblog
 
         List<object> list = new List<object>();
 
-        foreach (var post in Storage.GetAllPosts().Take(numberOfPosts))
+        foreach (var post in storage.GetAllPosts().Take(numberOfPosts))
         {
             var info = new
             {
@@ -192,6 +198,15 @@ public class MetaWeblogHandler : XmlRpcService, IMetaWeblog
         {
             throw new XmlRpcFaultException(0, "User is not valid!");
         }
+    }
+
+    private string CreateSlug(string title)
+    {
+        var slug = Slug.Create(title);
+        if (storage.GetAllPosts().Any(p => string.Equals(p.Slug, title, StringComparison.OrdinalIgnoreCase)))
+            throw new HttpException(409, "Already in use");
+
+        return slug;
     }
 }
 

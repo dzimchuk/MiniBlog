@@ -3,15 +3,19 @@ using System.Configuration;
 using System.Linq;
 using System.Net.Mail;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Web;
 using System.Web.Security;
 using System.Web.WebPages;
+using Microsoft.Practices.ServiceLocation;
 
 public class CommentHandler : IHttpHandler
 {
+    private readonly IStorageAdapter storage = ServiceLocator.Current.GetInstance<IStorageAdapter>();
+
     public void ProcessRequest(HttpContext context)
     {
-        Post post = Storage.GetAllPosts().FirstOrDefault(p => p.ID == context.Request["postId"]);
+        Post post = storage.GetAllPosts().FirstOrDefault(p => p.ID == context.Request["postId"]);
 
         if (post == null)
             throw new HttpException(404, "The post does not exist");
@@ -32,7 +36,7 @@ public class CommentHandler : IHttpHandler
         }
     }
 
-    private static void Save(HttpContext context, Post post)
+    private void Save(HttpContext context, Post post)
     {
         Blog.ValidateToken(context);
 
@@ -59,12 +63,12 @@ public class CommentHandler : IHttpHandler
         };
 
         post.Comments.Add(comment);
-        Storage.Save(post);
+        storage.Save(post);
 
         if (!context.User.Identity.IsAuthenticated)
         {
             MailMessage mail = GenerateEmail(comment, post, context.Request);
-            System.Threading.ThreadPool.QueueUserWorkItem((s) => SendEmail(mail));
+            ThreadPool.QueueUserWorkItem((s) => SendEmail(mail));
         }
 
         RenderComment(context, comment);
@@ -147,7 +151,7 @@ public class CommentHandler : IHttpHandler
         return string.Empty;
     }
 
-    private static void Delete(HttpContext context, Post post)
+    private void Delete(HttpContext context, Post post)
     {
         if (!context.User.Identity.IsAuthenticated)
         {
@@ -158,12 +162,12 @@ public class CommentHandler : IHttpHandler
         Comment comment = GetComment(context, post);
 
         post.Comments.Remove(comment);
-        Storage.Save(post);
+        storage.Save(post);
 
         RedirectOnGET(context, post);
     }
 
-    private static void Approve(HttpContext context, Post post)
+    private void Approve(HttpContext context, Post post)
     {
         if (!context.User.Identity.IsAuthenticated)
         {
@@ -174,7 +178,7 @@ public class CommentHandler : IHttpHandler
         Comment comment = GetComment(context, post);
 
         comment.IsApproved = true;
-        Storage.Save(post);
+        storage.Save(post);
 
         RedirectOnGET(context, post);
     }
