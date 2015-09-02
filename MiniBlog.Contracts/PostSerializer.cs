@@ -65,6 +65,8 @@ namespace MiniBlog.Contracts
                            PubDate = DateTime.Parse(ReadValue(doc, "pubDate")),
                            LastModified = DateTime.Parse(ReadValue(doc, "lastModified", DateTime.Now.ToString(CultureInfo.InvariantCulture))),
                            IsPublished = bool.Parse(ReadValue(doc, "ispublished", "true")),
+                           Categories = new string[0],
+                           Comments = new List<Comment>()
                        };
 
             LoadCategories(post, doc);
