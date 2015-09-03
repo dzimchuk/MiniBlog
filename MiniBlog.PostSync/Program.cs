@@ -1,5 +1,6 @@
 ﻿using LightInject;
 using Microsoft.Azure.WebJobs;
+using MiniBlog.Contracts;
 
 namespace MiniBlog.PostSync
 {
@@ -8,9 +9,16 @@ namespace MiniBlog.PostSync
         static void Main()
         {
             var container = InitializeLightInject();
-            var config = new JobHostConfiguration { JobActivator = new LightInjectJobActivator(container) };
+            var configuration = container.GetInstance<IConfiguration>();
 
-            var host = new JobHost(config);
+            var hostConfiguration = new JobHostConfiguration
+                                    {
+                                        JobActivator = new LightInjectJobActivator(container),
+                                        DashboardConnectionString = configuration.Find("AzureWebJobsDashboard"),
+                                        StorageConnectionString = configuration.Find("AzureWebJobsStorage")
+                                    };
+
+            var host = new JobHost(hostConfiguration);
             host.Call(typeof(SyncJob).GetMethod("SyncPostsAsync"));
         }
 

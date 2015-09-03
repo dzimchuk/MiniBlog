@@ -7,11 +7,17 @@ namespace MiniBlog.Services
     internal class LocalPathProvider : ILocalPathProvider
     {
         private const string AppData = "App_Data";
+        private readonly IConfiguration configuration;
+
+        public LocalPathProvider(IConfiguration configuration)
+        {
+            this.configuration = configuration;
+        }
 
         public string GetAppDataPath()
         {
 #if DEBUG
-            return Path.Combine(@"d:\dev\.github\MiniBlog\Website\", AppData);
+            return Path.Combine(configuration.Find("WebRootPath"), AppData);
 #else
             var webRoot = Environment.GetEnvironmentVariable("WEBROOT_PATH");
             if (string.IsNullOrWhiteSpace(webRoot))

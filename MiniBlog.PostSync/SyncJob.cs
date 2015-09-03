@@ -29,7 +29,9 @@ namespace MiniBlog.PostSync
             var client = storageAccount.CreateCloudBlobClient();
             var container = client.GetContainerReference(configuration.Find("blog:postContainer"));
 
+            await log.WriteLineAsync("PostSync started");
             await SyncPostsAsync(container, log);
+            await log.WriteLineAsync("PostSync finished");
         }
 
         private async Task SyncPostsAsync(CloudBlobContainer container, TextWriter log)
