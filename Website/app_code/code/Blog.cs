@@ -8,7 +8,6 @@ using System.Web;
 using System.Web.Caching;
 using System.Web.Helpers;
 using System.Web.Hosting;
-using Data;
 using Microsoft.Practices.ServiceLocation;
 using MiniBlog.Contracts;
 

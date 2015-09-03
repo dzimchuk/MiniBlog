@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AuthenticationService.cs" />
     <Compile Include="Composition\CompositionModule.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="LocalPathProvider.cs" />

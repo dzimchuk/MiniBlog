@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constants.cs" />
+    <Compile Include="IAuthenticationService.cs" />
     <Compile Include="ICommand.cs" />
     <Compile Include="ILocalPathProvider.cs" />
     <Compile Include="IPostSerializer.cs" />

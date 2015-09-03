@@ -194,7 +194,7 @@ public class MetaWeblogHandler : XmlRpcService, IMetaWeblog
 
     private void ValidateUser(string username, string password)
     {
-        if (!FormsAuthentication.Authenticate(username, password))
+        if (!AuthenticationService.Authenticate(username, password))
         {
             throw new XmlRpcFaultException(0, "User is not valid!");
         }

@@ -178,8 +178,6 @@ Website/bin/zh-Hans/*.dll
 Website/bin/zh-Hant/*.dll
 Website/bin/*.xml
 
-Web.config.bck
-
 PublishProfiles/
 website.publishproj
 
