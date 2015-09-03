@@ -14,11 +14,13 @@ namespace MiniBlog.PostSync
     {
         private readonly ILocalStorage localStorage;
         private readonly IConfiguration configuration;
+        private readonly IChangeNotifier changeNotifier;
 
-        public SyncJob(ILocalStorage localStorage, IConfiguration configuration)
+        public SyncJob(ILocalStorage localStorage, IConfiguration configuration, IChangeNotifier changeNotifier)
         {
             this.localStorage = localStorage;
             this.configuration = configuration;
+            this.changeNotifier = changeNotifier;
         }
 
         [NoAutomaticTrigger]
@@ -54,10 +56,12 @@ namespace MiniBlog.PostSync
                 localStorage.DeletePost(post);
                 metadata.Remove(post);
 
+                changeNotifier.TrachChange(post);
                 await log.WriteLineAsync(string.Format("{0} has been deleted.", post));
             }
 
             localStorage.SaveMetadata(metadata);
+            await changeNotifier.NotifyAsync();
         }
 
         private async Task<List<string>> ProcessItemsAsync(IEnumerable<IListBlobItem> items, 
@@ -84,6 +88,7 @@ namespace MiniBlog.PostSync
                         await DownloadPostAsync(blobName, blob);
                         metadata[blobName] = blob.Properties.ETag;
 
+                        changeNotifier.TrachChange(blobName);
                         await log.WriteLineAsync(string.Format("{0} has been updated. Old ETag: {1}, New ETag: {2}",
                             blobName, cachedEtag, blob.Properties.ETag));
                     }
@@ -93,6 +98,7 @@ namespace MiniBlog.PostSync
                     await DownloadPostAsync(blobName, blob);
                     metadata.Add(blobName, blob.Properties.ETag);
 
+                    changeNotifier.TrachChange(blobName);
                     await log.WriteLineAsync(string.Format("{0} has been added. ETag: {1}",
                             blobName, blob.Properties.ETag));
                 }

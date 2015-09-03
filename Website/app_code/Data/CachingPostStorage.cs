@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
+using System.Web.Caching;
 using MiniBlog.Contracts;
 
 namespace Data
@@ -10,11 +12,13 @@ namespace Data
     {
         private readonly IPostStorage storage;
         private readonly IPostMapper mapper;
+        private readonly ILocalPathProvider localPathProvider;
 
-        public CachingPostStorage(IPostStorage storage, IPostMapper mapper)
+        public CachingPostStorage(IPostStorage storage, IPostMapper mapper, ILocalPathProvider localPathProvider)
         {
             this.storage = storage;
             this.mapper = mapper;
+            this.localPathProvider = localPathProvider;
         }
 
         public List<Post> GetAllPosts()
@@ -59,10 +63,16 @@ namespace Data
             Blog.ClearStartPageCache();
         }
 
-        private static void SortAndCache(List<Post> posts)
+        private void SortAndCache(List<Post> posts)
         {
             posts.Sort((p1, p2) => p2.PubDate.CompareTo(p1.PubDate));
-            HttpRuntime.Cache.Insert("posts", posts);
+            HttpRuntime.Cache.Insert("posts", posts, CreateCacheDependency());
+        }
+
+        private CacheDependency CreateCacheDependency()
+        {
+            var path = Path.Combine(localPathProvider.GetAppDataPath(), Constants.NotificationFileName);
+            return new CacheDependency(path);
         }
     }
 }

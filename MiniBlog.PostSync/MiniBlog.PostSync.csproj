@@ -85,9 +85,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Composition\CompositionModule.cs" />
+    <Compile Include="IChangeNotifier.cs" />
     <Compile Include="ILocalStorage.cs" />
     <Compile Include="LightInjectJobActivator.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="Storage\FileBasedChangeNotifier.cs" />
     <Compile Include="Storage\LocalStorage.cs" />
     <Compile Include="SyncJob.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
