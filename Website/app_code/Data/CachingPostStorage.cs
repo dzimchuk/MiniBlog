@@ -50,7 +50,11 @@ namespace Data
             storage.Delete(mapper.MapFrom(post));
 
             var posts = GetAllPosts();
-            posts.Remove(post);
+            var cachedPost = posts.FirstOrDefault(p => p.ID == post.ID);
+            if (cachedPost != null)
+            {
+                posts.Remove(cachedPost);
+            }
 
             Blog.ClearStartPageCache();
         }

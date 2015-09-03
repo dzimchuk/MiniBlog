@@ -11,6 +11,12 @@ namespace Data
     internal class LocalPostStorage : IPostStorage
     {
         private static readonly string Folder = HostingEnvironment.MapPath("~/posts/");
+        private readonly IPostSerializer postSerializer;
+
+        public LocalPostStorage(IPostSerializer postSerializer)
+        {
+            this.postSerializer = postSerializer;
+        }
 
         public List<BlogPost> GetAllPosts()
         {
@@ -20,7 +26,7 @@ namespace Data
         public void Save(BlogPost post)
         {
             post.LastModified = DateTime.UtcNow;
-            var doc = PostSerializer.Serialize(post);
+            var doc = postSerializer.Serialize(post);
 
             var file = GetFileName(post);
             doc.Save(file);
@@ -32,7 +38,7 @@ namespace Data
             File.Delete(file);
         }
 
-        private static List<BlogPost> LoadPosts()
+        private List<BlogPost> LoadPosts()
         {
             if (!Directory.Exists(Folder))
                 Directory.CreateDirectory(Folder);
@@ -42,7 +48,7 @@ namespace Data
             foreach (var file in Directory.EnumerateFiles(Folder, "*.xml", SearchOption.TopDirectoryOnly))
             {
                 var doc = XElement.Load(file);
-                var post = PostSerializer.Deserialize(doc, Path.GetFileNameWithoutExtension(file));
+                var post = postSerializer.Deserialize(doc, Path.GetFileNameWithoutExtension(file));
 
                 list.Add(post);
             }
@@ -52,7 +58,7 @@ namespace Data
 
         private static string GetFileName(BlogPost post)
         {
-            return Path.Combine(Folder, post.Id + ".xml");
+            return Path.Combine(Folder, post.GetFileName());
         }
     }
 }

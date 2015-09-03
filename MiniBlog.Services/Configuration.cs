@@ -2,7 +2,7 @@
 using System.Configuration;
 using MiniBlog.Contracts;
 
-namespace Util
+namespace MiniBlog.Services
 {
     internal class Configuration : IConfiguration
     {

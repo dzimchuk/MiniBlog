@@ -182,3 +182,5 @@ Web.config.bck
 
 PublishProfiles/
 website.publishproj
+
+Website/App_Data/posts/

@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Xml.Linq;
 using System.Xml.XPath;
+using MiniBlog.Contracts;
 using MiniBlog.Contracts.Model;
 
-namespace MiniBlog.Contracts
+namespace MiniBlog.Services
 {
-    public static class PostSerializer
+    internal class PostSerializer : IPostSerializer
     {
-        public static XDocument Serialize(Post post)
+        public XDocument Serialize(Post post)
         {
             var doc = new XDocument(
                 new XElement("post",
@@ -52,7 +53,7 @@ namespace MiniBlog.Contracts
             return doc;
         }
 
-        public static Post Deserialize(XElement doc, string postId)
+        public Post Deserialize(XElement doc, string postId)
         {
             var post = new Post()
                        {

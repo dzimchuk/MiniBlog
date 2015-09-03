@@ -16,5 +16,10 @@ namespace MiniBlog.Contracts.Model
         public bool IsPublished { get; set; }
         public string[] Categories { get; set; }
         public List<Comment> Comments { get; set; }
+
+        public string GetFileName()
+        {
+            return string.Format("{0}.xml", Id);
+        }
     }
 }

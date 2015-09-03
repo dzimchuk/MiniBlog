@@ -10,7 +10,6 @@ public class CompositionModule : ICompositionRoot
         serviceRegistry.Register<IFileStorage, LocalFileStorage>();
         serviceRegistry.Register<IPostStorage, LocalPostStorage>();
         serviceRegistry.Register<IStorageAdapter, CachingPostStorage>();
-        serviceRegistry.Register<IConfiguration, Configuration>();
         serviceRegistry.Register<IPostMapper, PostMapper>();
     }
 }

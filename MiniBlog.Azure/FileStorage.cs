@@ -7,7 +7,7 @@ using MiniBlog.Contracts;
 
 namespace MiniBlog.Azure
 {
-    internal class BlobStorage : IFileStorage
+    internal class FileStorage : IFileStorage
     {
         private readonly CloudBlobContainer container;
 
@@ -22,7 +22,7 @@ namespace MiniBlog.Azure
                                                                          { "tiff", "image/tiff" }
                                                                      };
 
-        public BlobStorage(IConfiguration configuration)
+        public FileStorage(IConfiguration configuration)
         {
             var storageAccount = CloudStorageAccount.Parse(configuration.Find("blog:contentStorage"));
             var client = storageAccount.CreateCloudBlobClient();

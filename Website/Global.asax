@@ -21,6 +21,7 @@
     public void Application_Start(object sender, EventArgs e)
     {
         var container = new ServiceContainer();
+        container.RegisterFrom<MiniBlog.Services.Composition.CompositionModule>();
         container.RegisterFrom<CompositionModule>();
         container.RegisterFrom<MiniBlog.Azure.Composition.CompositionModule>();
 

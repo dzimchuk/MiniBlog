@@ -7,7 +7,7 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "Website", "http://localhost
 	ProjectSection(WebsiteProperties) = preProject
 		UseIISExpress = "true"
 		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.5.2"
-		ProjectReferences = "{492c9e12-9f38-462b-9c42-602bdb51c53d}|MiniBlog.Contracts.dll;{78a67265-5015-4bc5-a737-56e32f72877f}|MiniBlog.Azure.dll;"
+		ProjectReferences = "{492c9e12-9f38-462b-9c42-602bdb51c53d}|MiniBlog.Contracts.dll;{78a67265-5015-4bc5-a737-56e32f72877f}|MiniBlog.Azure.dll;{95637681-4f48-4e2f-82ce-c631f9394eef}|MiniBlog.Services.dll;"
 		Debug.AspNetCompiler.VirtualPath = "/localhost_36123"
 		Debug.AspNetCompiler.PhysicalPath = "Website\"
 		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_36123\"
@@ -39,6 +39,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniBlog.Contracts", "MiniB
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniBlog.Azure", "MiniBlog.Azure\MiniBlog.Azure.csproj", "{78A67265-5015-4BC5-A737-56E32F72877F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniBlog.PostSync", "MiniBlog.PostSync\MiniBlog.PostSync.csproj", "{131507B8-1CBF-41AF-A34A-E3235C555736}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniBlog.Services", "MiniBlog.Services\MiniBlog.Services.csproj", "{95637681-4F48-4E2F-82CE-C631F9394EEF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,6 +65,14 @@ Global
 		{78A67265-5015-4BC5-A737-56E32F72877F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{78A67265-5015-4BC5-A737-56E32F72877F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{78A67265-5015-4BC5-A737-56E32F72877F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{131507B8-1CBF-41AF-A34A-E3235C555736}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{131507B8-1CBF-41AF-A34A-E3235C555736}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{131507B8-1CBF-41AF-A34A-E3235C555736}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{131507B8-1CBF-41AF-A34A-E3235C555736}.Release|Any CPU.Build.0 = Release|Any CPU
+		{95637681-4F48-4E2F-82CE-C631F9394EEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{95637681-4F48-4E2F-82CE-C631F9394EEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{95637681-4F48-4E2F-82CE-C631F9394EEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{95637681-4F48-4E2F-82CE-C631F9394EEF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
