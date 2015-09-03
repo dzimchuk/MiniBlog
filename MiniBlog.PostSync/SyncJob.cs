@@ -48,11 +48,14 @@ namespace MiniBlog.PostSync
             var missingPosts = (from p in metadata.Keys
                                 where processedBlobs.All(item => item != p)
                                 select p).ToList();
-            missingPosts.ForEach(post =>
-                                 {
-                                     localStorage.DeletePost(post);
-                                     metadata.Remove(post);
-                                 });
+
+            foreach (var post in missingPosts)
+            {
+                localStorage.DeletePost(post);
+                metadata.Remove(post);
+
+                await log.WriteLineAsync(string.Format("{0} has been deleted.", post));
+            }
 
             localStorage.SaveMetadata(metadata);
         }
@@ -75,16 +78,23 @@ namespace MiniBlog.PostSync
                 var blobName = GetBlobName(item);
                 if (metadata.ContainsKey(blobName))
                 {
-                    if (!metadata[blobName].Equals(blob.Properties.ETag, StringComparison.OrdinalIgnoreCase))
+                    var cachedEtag = metadata[blobName];
+                    if (!cachedEtag.Equals(blob.Properties.ETag, StringComparison.OrdinalIgnoreCase))
                     {
                         await DownloadPostAsync(blobName, blob);
                         metadata[blobName] = blob.Properties.ETag;
+
+                        await log.WriteLineAsync(string.Format("{0} has been updated. Old ETag: {1}, New ETag: {2}",
+                            blobName, cachedEtag, blob.Properties.ETag));
                     }
                 }
                 else
                 {
                     await DownloadPostAsync(blobName, blob);
                     metadata.Add(blobName, blob.Properties.ETag);
+
+                    await log.WriteLineAsync(string.Format("{0} has been added. ETag: {1}",
+                            blobName, blob.Properties.ETag));
                 }
 
                 result.Add(blobName);
