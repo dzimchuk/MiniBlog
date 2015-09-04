@@ -18,7 +18,7 @@ namespace MiniBlog.Services
             if (string.IsNullOrWhiteSpace(userName) || string.IsNullOrWhiteSpace(password))
                 return false;
 
-            if (!userName.Equals(configuration.Find("UserName"), System.StringComparison.OrdinalIgnoreCase))
+            if (!userName.Equals(configuration.Find("auth:userName"), System.StringComparison.OrdinalIgnoreCase))
                 return false;
 
             return VerifyPassword(password);
@@ -35,7 +35,7 @@ namespace MiniBlog.Services
                 builder.AppendFormat("{0:x2}", b);
             }
 
-            return builder.ToString().Equals(configuration.Find("PasswordHash"), System.StringComparison.OrdinalIgnoreCase);
+            return builder.ToString().Equals(configuration.Find("auth:passwordHash"), System.StringComparison.OrdinalIgnoreCase);
         }
     }
 }

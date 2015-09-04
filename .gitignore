@@ -182,3 +182,4 @@ PublishProfiles/
 website.publishproj
 
 Website/App_Data/posts/
+Website/App_Data/changes.txt
