@@ -43,7 +43,7 @@ namespace MiniBlog.Azure
         {
             var blobName = string.Format(CultureInfo.InvariantCulture, "{0}.{1}", Guid.NewGuid(), extension.Trim('.'));
 
-            var container = containerFactory.Create("blog:contentContainer");
+            var container = containerFactory.Create(Constants.FileContainerKey);
             var blob = container.GetBlockBlobReference(blobName);
             blob.UploadFromByteArray(bytes, 0, bytes.Length);
 

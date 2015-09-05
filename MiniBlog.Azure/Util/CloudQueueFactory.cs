@@ -1,24 +1,24 @@
 ﻿using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Blob;
+using Microsoft.WindowsAzure.Storage.Queue;
 using MiniBlog.Contracts;
 using MiniBlog.Contracts.Framework;
 
 namespace MiniBlog.Azure.Util
 {
-    internal class BlobContainerFactory : IBlobContainerFactory
+    internal class CloudQueueFactory : ICloudQueueFactory
     {
         private readonly IConfiguration configuration;
 
-        public BlobContainerFactory(IConfiguration configuration)
+        public CloudQueueFactory(IConfiguration configuration)
         {
             this.configuration = configuration;
         }
 
-        public CloudBlobContainer Create(string containerKey)
+        public CloudQueue Create(string queueKey)
         {
             var storageAccount = CloudStorageAccount.Parse(configuration.Find(Constants.ContentStorageKey));
-            var client = storageAccount.CreateCloudBlobClient();
-            return client.GetContainerReference(configuration.Find(containerKey));
+            var client = storageAccount.CreateCloudQueueClient();
+            return client.GetQueueReference(configuration.Find(queueKey));
         }
     }
 }

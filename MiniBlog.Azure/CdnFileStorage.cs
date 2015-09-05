@@ -24,7 +24,7 @@ namespace MiniBlog.Azure
             if (string.IsNullOrWhiteSpace(cdnUrl))
                 return url;
 
-            var containerName = configuration.Find("blog:contentContainer");
+            var containerName = configuration.Find(Constants.FileContainerKey);
 
             var index = url.IndexOf(containerName, StringComparison.OrdinalIgnoreCase);
             return index > -1

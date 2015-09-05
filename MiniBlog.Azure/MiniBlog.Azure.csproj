@@ -76,6 +76,7 @@
     <Compile Include="Commands\DeletePostLocallyCommand.cs" />
     <Compile Include="Commands\PersistPostBlobCommand.cs" />
     <Compile Include="Commands\PersistPostLocallyCommand.cs" />
+    <Compile Include="Commands\SendSearchIndexMessageCommand.cs" />
     <Compile Include="FileStorage.cs" />
     <Compile Include="CdnFileStorage.cs" />
     <Compile Include="Composition\CompositionModule.cs" />
@@ -84,7 +85,10 @@
     <Compile Include="PostStorage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queries\ListLocalPostsQuery.cs" />
+    <Compile Include="SearchIndexService.cs" />
     <Compile Include="Util\BlobContainerFactory.cs" />
+    <Compile Include="Util\CloudQueueFactory.cs" />
+    <Compile Include="ICloudQueueFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MiniBlog.Contracts\MiniBlog.Contracts.csproj">

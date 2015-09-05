@@ -15,6 +15,9 @@ namespace MiniBlog.Azure.Composition
             serviceRegistry.Register<IPostStorage, PostStorage>();
 
             serviceRegistry.Register<IBlobContainerFactory, BlobContainerFactory>();
+            serviceRegistry.Register<ICloudQueueFactory, CloudQueueFactory>();
+
+            serviceRegistry.Register<ISearchIndexService, SearchIndexService>();
         }
     }
 }

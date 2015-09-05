@@ -29,7 +29,7 @@ namespace MiniBlog.Azure
         public void Save(Post post)
         {
             var persistPostBlobCommand = new PersistPostBlobCommand(post, postSerializer);
-            persistPostBlobCommand.Apply(containerFactory.Create("blog:postContainer"));
+            persistPostBlobCommand.Apply(containerFactory.Create(Constants.PostContainerKey));
 
             var persistPostLocallyCommand = new PersistPostLocallyCommand(post, postSerializer);
             persistPostLocallyCommand.Apply(GetPostDiretory());
@@ -38,7 +38,7 @@ namespace MiniBlog.Azure
         public void Delete(Post post)
         {
             var deletePostBlobCommand = new DeletePostBlobCommand(post);
-            deletePostBlobCommand.Apply(containerFactory.Create("blog:postContainer"));
+            deletePostBlobCommand.Apply(containerFactory.Create(Constants.PostContainerKey));
 
             var deletePostLocallyCommand = new DeletePostLocallyCommand(post);
             deletePostLocallyCommand.Apply(GetPostDiretory());

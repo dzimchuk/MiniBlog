@@ -4,6 +4,6 @@ namespace MiniBlog.Azure
 {
     public interface IBlobContainerFactory
     {
-        CloudBlobContainer Create(string containerName);
+        CloudBlobContainer Create(string containerKey);
     }
 }

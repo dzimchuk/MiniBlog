@@ -53,6 +53,7 @@
     <Compile Include="Framework\IConfiguration.cs" />
     <Compile Include="IFileStorage.cs" />
     <Compile Include="Framework\IQuery.cs" />
+    <Compile Include="ISearchIndexService.cs" />
     <Compile Include="ISearchService.cs" />
     <Compile Include="Model\Comment.cs" />
     <Compile Include="Model\Post.cs" />
