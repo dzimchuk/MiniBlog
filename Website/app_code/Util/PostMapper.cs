@@ -7,8 +7,18 @@ namespace Util
     {
         static PostMapper()
         {
-            Mapper.CreateMap<MiniBlog.Contracts.Model.Comment, Comment>().ReverseMap();
-            Mapper.CreateMap<MiniBlog.Contracts.Model.Post, Post>().ReverseMap();
+            Mapper.CreateMap<MiniBlog.Contracts.Model.Comment, Comment>()
+                  .ForMember(dest => dest.ID, config => config.MapFrom(source => source.Id))
+                  .ReverseMap()
+                  .ForMember(dest => dest.Id, config => config.MapFrom(source => source.ID));
+            Mapper.CreateMap<MiniBlog.Contracts.Model.Post, Post>()
+                  .ForMember(dest => dest.ID, config => config.MapFrom(source => source.Id))
+                  .ForMember(dest => dest.AbsoluteUrl, config => config.Ignore())
+                  .ForMember(dest => dest.Url, config => config.Ignore())
+                  .ReverseMap()
+                  .ForMember(dest => dest.Id, config => config.MapFrom(source => source.ID));
+
+            Mapper.AssertConfigurationIsValid();
         }
 
         public Post MapFrom(MiniBlog.Contracts.Model.Post post)

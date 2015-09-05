@@ -56,6 +56,10 @@
     <Compile Include="ISearchService.cs" />
     <Compile Include="Model\Comment.cs" />
     <Compile Include="Model\Post.cs" />
+    <Compile Include="Model\Search\Document.cs" />
+    <Compile Include="Model\Search\HitHighlights.cs" />
+    <Compile Include="Model\Search\SearchResult.cs" />
+    <Compile Include="Model\Search\SuggestResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
