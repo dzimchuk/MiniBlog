@@ -46,13 +46,13 @@
   <ItemGroup>
     <Compile Include="Constants.cs" />
     <Compile Include="IAuthenticationService.cs" />
-    <Compile Include="ICommand.cs" />
+    <Compile Include="Framework\ICommand.cs" />
     <Compile Include="ILocalPathProvider.cs" />
     <Compile Include="IPostSerializer.cs" />
     <Compile Include="IPostStorage.cs" />
-    <Compile Include="IConfiguration.cs" />
+    <Compile Include="Framework\IConfiguration.cs" />
     <Compile Include="IFileStorage.cs" />
-    <Compile Include="IQuery.cs" />
+    <Compile Include="Framework\IQuery.cs" />
     <Compile Include="ISearchService.cs" />
     <Compile Include="Model\Comment.cs" />
     <Compile Include="Model\Post.cs" />

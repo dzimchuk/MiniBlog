@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Blob;
 using MiniBlog.Azure.Commands;
 using MiniBlog.Azure.Queries;
 using MiniBlog.Contracts;
@@ -13,13 +11,13 @@ namespace MiniBlog.Azure
     {
         private readonly ILocalPathProvider localPathProvider;
         private readonly IPostSerializer postSerializer;
-        private readonly IConfiguration configuration;
+        private readonly IBlobContainerFactory containerFactory;
 
-        public PostStorage(ILocalPathProvider localPathProvider, IPostSerializer postSerializer, IConfiguration configuration)
+        public PostStorage(ILocalPathProvider localPathProvider, IPostSerializer postSerializer, IBlobContainerFactory containerFactory)
         {
             this.localPathProvider = localPathProvider;
             this.postSerializer = postSerializer;
-            this.configuration = configuration;
+            this.containerFactory = containerFactory;
         }
 
         public List<Post> GetAllPosts()
@@ -31,7 +29,7 @@ namespace MiniBlog.Azure
         public void Save(Post post)
         {
             var persistPostBlobCommand = new PersistPostBlobCommand(post, postSerializer);
-            persistPostBlobCommand.Apply(GetCloudContainer());
+            persistPostBlobCommand.Apply(containerFactory.Create("blog:postContainer"));
 
             var persistPostLocallyCommand = new PersistPostLocallyCommand(post, postSerializer);
             persistPostLocallyCommand.Apply(GetPostDiretory());
@@ -40,7 +38,7 @@ namespace MiniBlog.Azure
         public void Delete(Post post)
         {
             var deletePostBlobCommand = new DeletePostBlobCommand(post);
-            deletePostBlobCommand.Apply(GetCloudContainer());
+            deletePostBlobCommand.Apply(containerFactory.Create("blog:postContainer"));
 
             var deletePostLocallyCommand = new DeletePostLocallyCommand(post);
             deletePostLocallyCommand.Apply(GetPostDiretory());
@@ -53,13 +51,6 @@ namespace MiniBlog.Azure
                 Directory.CreateDirectory(diretory);
 
             return diretory;
-        }
-
-        private CloudBlobContainer GetCloudContainer()
-        {
-            var storageAccount = CloudStorageAccount.Parse(configuration.Find("blog:contentStorage"));
-            var client = storageAccount.CreateCloudBlobClient();
-            return client.GetContainerReference(configuration.Find("blog:postContainer"));
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using MiniBlog.Contracts;
+using MiniBlog.Contracts.Framework;
 
 namespace MiniBlog.Services
 {

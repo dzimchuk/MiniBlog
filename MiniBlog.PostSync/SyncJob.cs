@@ -7,6 +7,7 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using MiniBlog.Contracts;
+using MiniBlog.Contracts.Framework;
 
 namespace MiniBlog.PostSync
 {
@@ -59,7 +60,7 @@ namespace MiniBlog.PostSync
                 metadata.Remove(post);
 
                 changeNotifier.TrachChange(post);
-                await log.WriteLineAsync(string.Format("{0} has been deleted.", post));
+                await log.WriteLineAsync($"{post} has been deleted.");
             }
 
             localStorage.SaveMetadata(metadata);
@@ -77,7 +78,7 @@ namespace MiniBlog.PostSync
                 var blob = item as CloudBlockBlob;
                 if (blob == null)
                 {
-                    await log.WriteLineAsync(string.Format("'{0}' is not a block blob.", item.Uri));
+                    await log.WriteLineAsync($"'{item.Uri}' is not a block blob.");
                     continue;
                 }
 
@@ -91,8 +92,7 @@ namespace MiniBlog.PostSync
                         metadata[blobName] = blob.Properties.ETag;
 
                         changeNotifier.TrachChange(blobName);
-                        await log.WriteLineAsync(string.Format("{0} has been updated. Old ETag: {1}, New ETag: {2}",
-                            blobName, cachedEtag, blob.Properties.ETag));
+                        await log.WriteLineAsync($"{blobName} has been updated. Old ETag: {cachedEtag}, New ETag: {blob.Properties.ETag}");
                     }
                 }
                 else
@@ -101,8 +101,7 @@ namespace MiniBlog.PostSync
                     metadata.Add(blobName, blob.Properties.ETag);
 
                     changeNotifier.TrachChange(blobName);
-                    await log.WriteLineAsync(string.Format("{0} has been added. ETag: {1}",
-                            blobName, blob.Properties.ETag));
+                    await log.WriteLineAsync($"{blobName} has been added. ETag: {blob.Properties.ETag}");
                 }
 
                 result.Add(blobName);

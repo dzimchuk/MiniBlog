@@ -79,10 +79,12 @@
     <Compile Include="FileStorage.cs" />
     <Compile Include="CdnFileStorage.cs" />
     <Compile Include="Composition\CompositionModule.cs" />
+    <Compile Include="IBlobContainerFactory.cs" />
     <Compile Include="PostSerializerExtensions.cs" />
     <Compile Include="PostStorage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queries\ListLocalPostsQuery.cs" />
+    <Compile Include="Util\BlobContainerFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MiniBlog.Contracts\MiniBlog.Contracts.csproj">

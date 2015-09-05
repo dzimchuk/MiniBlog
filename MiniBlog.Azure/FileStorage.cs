@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using MiniBlog.Contracts;
 
@@ -9,7 +8,7 @@ namespace MiniBlog.Azure
 {
     internal class FileStorage : IFileStorage
     {
-        private readonly CloudBlobContainer container;
+        private readonly IBlobContainerFactory containerFactory;
 
         private readonly Dictionary<string, string> knownMimeTypes = new Dictionary<string, string>
                                                                      {
@@ -22,11 +21,9 @@ namespace MiniBlog.Azure
                                                                          { "tiff", "image/tiff" }
                                                                      };
 
-        public FileStorage(IConfiguration configuration)
+        public FileStorage(IBlobContainerFactory containerFactory)
         {
-            var storageAccount = CloudStorageAccount.Parse(configuration.Find("blog:contentStorage"));
-            var client = storageAccount.CreateCloudBlobClient();
-            container = client.GetContainerReference(configuration.Find("blog:contentContainer"));
+            this.containerFactory = containerFactory;
         }
 
         public string Save(byte[] bytes, string extension)
@@ -45,6 +42,8 @@ namespace MiniBlog.Azure
         private ICloudBlob Upload(byte[] bytes, string extension)
         {
             var blobName = string.Format(CultureInfo.InvariantCulture, "{0}.{1}", Guid.NewGuid(), extension.Trim('.'));
+
+            var container = containerFactory.Create("blog:contentContainer");
             var blob = container.GetBlockBlobReference(blobName);
             blob.UploadFromByteArray(bytes, 0, bytes.Length);
 

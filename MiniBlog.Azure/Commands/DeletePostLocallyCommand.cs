@@ -1,5 +1,5 @@
 ﻿using System.IO;
-using MiniBlog.Contracts;
+using MiniBlog.Contracts.Framework;
 using MiniBlog.Contracts.Model;
 
 namespace MiniBlog.Azure.Commands

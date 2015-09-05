@@ -1,5 +1,6 @@
 ﻿using Microsoft.WindowsAzure.Storage.Blob;
 using MiniBlog.Contracts;
+using MiniBlog.Contracts.Framework;
 using MiniBlog.Contracts.Model;
 
 namespace MiniBlog.Azure.Commands

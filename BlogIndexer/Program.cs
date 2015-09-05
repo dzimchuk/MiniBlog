@@ -1,100 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using BlogIndexer.Model;
-using Microsoft.Azure.Search;
-using Microsoft.Azure.Search.Models;
-using PowerArgs;
+﻿using LightInject;
+using Microsoft.Azure.WebJobs;
+using MiniBlog.WebJobs.Common;
 
 namespace BlogIndexer
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            try
-            {
-                var parsedArgs = Args.Parse<IndexerArgs>(args);
-                IndexPosts(parsedArgs);
-            }
-            catch (ArgException ex)
-            {
-                Console.WriteLine(ex.Message);
-                Console.WriteLine(ArgUsage.GenerateUsageFromTemplate<IndexerArgs>());
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-            }
+            var container = InitializeLightInject();
+            var configurationFactory = new JobHostConfigurationFactory(container);
+
+            var host = new JobHost(configurationFactory.Create());
+            host.Call(typeof(IndexerJob).GetMethod("IndexAsync"));
         }
 
-        private static void IndexPosts(IndexerArgs args)
+        private static IServiceContainer InitializeLightInject()
         {
-            var loader = new PostLoader(args.PostDirectory);
-            var posts = loader.LoadPosts();
+            var container = new ServiceContainer();
+            container.RegisterFrom<MiniBlog.Services.Composition.CompositionModule>();
+            container.RegisterFrom<MiniBlog.Search.Composition.CompositionModule>();
+            container.RegisterFrom<Composition.CompositionModule>();
 
-            Console.WriteLine("Posts to index: {0}", posts.Count);
-
-            var client = new SearchServiceClient(args.SearchService, new SearchCredentials(args.Key));
-            DeleteIndexIfExists(client, args.IndexName);
-            CreateIndex(client, args.IndexName);
-            UploadPosts(client.Indexes.GetClient(args.IndexName), posts);
-
-            Console.WriteLine("Done.");
-        }
-
-        private static void DeleteIndexIfExists(ISearchServiceClient client, string indexName)
-        {
-            if (client.Indexes.Exists(indexName))
-            {
-                Console.WriteLine("Deleting index {0}...", indexName);
-                client.Indexes.Delete(indexName);
-            }
-        }
-
-        private static void CreateIndex(ISearchServiceClient client, string indexName)
-        {
-            Console.WriteLine("Creating index {0}...", indexName);
-
-            var suggester = new Suggester
-                            {
-                                Name = "sg",
-                                SearchMode = SuggesterSearchMode.AnalyzingInfixMatching,
-                                SourceFields = new List<string> { "Title", "Categories" }
-                            };
-
-            var definition = new Index
-                             {
-                                 Name = indexName,
-                                 Fields = new List<Field>
-                                          {
-                                              new Field("Id", DataType.String) { IsKey = true },
-                                              new Field("Title", DataType.String) { IsSearchable = true, IsRetrievable = false },
-                                              new Field("Content", DataType.String, AnalyzerName.EnLucene) { IsSearchable = true, IsRetrievable = false },
-                                              new Field("Categories", DataType.Collection(DataType.String)) { IsSearchable = true, IsRetrievable = false },
-                                              new Field("IsPublished", DataType.Boolean) { IsFilterable = true, IsRetrievable = false },
-                                              new Field("PubDate", DataType.DateTimeOffset) { IsFilterable = true, IsRetrievable = false },
-                                          },
-                                 Suggesters = new List<Suggester> { suggester }
-                             };
-
-            client.Indexes.Create(definition);
-        }
-
-        private static void UploadPosts(ISearchIndexClient client, List<Post> posts)
-        {
-            Console.WriteLine("Uploading posts...");
-
-            try
-            {
-                client.Documents.Index(IndexBatch.Create(posts.Select(IndexAction.Create)));
-            }
-            catch (IndexBatchException e)
-            {
-                Console.WriteLine(
-                    "Failed to index some of the documents: {0}",
-                    string.Join(", ", e.IndexResponse.Results.Where(r => !r.Succeeded).Select(r => r.Key)));
-            }
+            return container;
         }
     }
 }

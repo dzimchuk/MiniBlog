@@ -1,7 +1,7 @@
 ﻿using LightInject;
 using Microsoft.Azure.WebJobs.Host;
 
-namespace MiniBlog.PostSync
+namespace MiniBlog.WebJobs.Common
 {
     internal class LightInjectJobActivator : IJobActivator
     {

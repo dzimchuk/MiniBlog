@@ -2,6 +2,7 @@
 using System.IO;
 using System.Xml.Linq;
 using MiniBlog.Contracts;
+using MiniBlog.Contracts.Framework;
 using MiniBlog.Contracts.Model;
 
 namespace MiniBlog.Azure.Queries

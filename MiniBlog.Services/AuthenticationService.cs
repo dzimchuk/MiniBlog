@@ -1,6 +1,7 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 using MiniBlog.Contracts;
+using MiniBlog.Contracts.Framework;
 
 namespace MiniBlog.Services
 {

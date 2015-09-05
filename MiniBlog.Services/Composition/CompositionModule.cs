@@ -1,5 +1,6 @@
 ﻿using LightInject;
 using MiniBlog.Contracts;
+using MiniBlog.Contracts.Framework;
 
 namespace MiniBlog.Services.Composition
 {

@@ -1,4 +1,6 @@
-﻿namespace MiniBlog.Contracts
+﻿using System;
+
+namespace MiniBlog.Contracts.Framework
 {
     public interface IConfiguration
     {
