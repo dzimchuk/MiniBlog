@@ -80,6 +80,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConfigurationBasedNameResolver.cs" />
     <Compile Include="LightInjectJobActivator.cs" />
     <Compile Include="JobHostConfigurationFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

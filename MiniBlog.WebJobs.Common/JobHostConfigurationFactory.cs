@@ -20,6 +20,7 @@ namespace MiniBlog.WebJobs.Common
             return new JobHostConfiguration
                    {
                        JobActivator = new LightInjectJobActivator(container),
+                       NameResolver = new ConfigurationBasedNameResolver(configuration),
                        DashboardConnectionString = configuration.Find("AzureWebJobsDashboard"),
                        StorageConnectionString = configuration.Find("AzureWebJobsStorage")
                    };

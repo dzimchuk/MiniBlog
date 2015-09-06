@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Microsoft.Azure.Search;
@@ -12,7 +11,7 @@ using Microsoft.WindowsAzure.Storage.Blob;
 using MiniBlog.Contracts;
 using MiniBlog.Contracts.Framework;
 using MiniBlog.Contracts.Model;
-using MiniBlog.Search;
+using MiniBlog.Search.Extensions;
 
 namespace BlogIndexer
 {
@@ -61,7 +60,7 @@ namespace BlogIndexer
             } while (token != null);
         }
 
-        private static readonly Regex RegexHtml = new Regex("<.*?>", RegexOptions.Compiled);
+        
         private async Task ProcessItemsAsync(IEnumerable<IListBlobItem> items, TextWriter log)
         {
             var posts = new List<Post>();
@@ -77,7 +76,6 @@ namespace BlogIndexer
 
                 var doc = await DownloadAsync(blob);
                 var post = postSerializer.Deserialize(doc, Path.GetFileNameWithoutExtension(GetBlobName(item)));
-                post.Content = RegexHtml.Replace(post.Content, " ");
 
                 posts.Add(post);
             }
@@ -140,15 +138,7 @@ namespace BlogIndexer
         {
             await log.WriteLineAsync("Uploading posts...");
 
-            var actions = posts.Select(post => new IndexAction(new Document
-                                                               {
-                                                                   { "Id", post.Id },
-                                                                   { "Title", post.Title },
-                                                                   { "Content", post.Content },
-                                                                   { "Categories", post.Categories },
-                                                                   { "IsPublished", post.IsPublished },
-                                                                   { "PubDate", post.PubDate }
-                                                               })).ToArray();
+            var actions = posts.Select(post => new IndexAction(post.ToDocument())).ToArray();
             try
             {
                 await searchIndexClient.IndexWithRetryAsync(actions);

@@ -2,7 +2,7 @@
 using Microsoft.Azure.Search;
 using Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling;
 
-namespace MiniBlog.Search
+namespace MiniBlog.Search.Extensions
 {
     internal class SearchIndexErrorDetectionStrategy : ITransientErrorDetectionStrategy
     {
