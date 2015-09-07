@@ -87,7 +87,7 @@ public class PostHandler : IHttpHandler
             byte[] bytes = ConvertToBytes(match.Groups[2].Value);
             string path = Blog.SaveFileToDisk(bytes, extension);
 
-            string value = string.Format("src=\"{0}\" alt=\"\" ", path);
+            string value = string.Format("src=\"{0}\" alt=\"\" class=\"img-responsive center-block\" ", path);
 
             if (match.Groups[1].Value == "href")
                 value = string.Format("href=\"{0}\"", path);
