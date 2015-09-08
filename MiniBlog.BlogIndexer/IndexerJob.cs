@@ -13,7 +13,7 @@ using MiniBlog.Contracts.Framework;
 using MiniBlog.Contracts.Model;
 using MiniBlog.Search.Extensions;
 
-namespace BlogIndexer
+namespace MiniBlog.BlogIndexer
 {
     public class IndexerJob
     {

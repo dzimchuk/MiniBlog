@@ -1,6 +1,6 @@
 ﻿using LightInject;
 
-namespace BlogIndexer.Composition
+namespace MiniBlog.BlogIndexer.Composition
 {
     public class CompositionModule : ICompositionRoot
     {

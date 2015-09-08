@@ -2,7 +2,7 @@
 using Microsoft.Azure.WebJobs;
 using MiniBlog.WebJobs.Common;
 
-namespace BlogIndexer
+namespace MiniBlog.BlogIndexer
 {
     class Program
     {

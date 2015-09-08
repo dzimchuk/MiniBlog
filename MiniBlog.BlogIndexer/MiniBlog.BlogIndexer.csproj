@@ -7,8 +7,8 @@
     <ProjectGuid>{8CFF7ED7-8A2C-4517-BFAC-1ACEFC8FFFCD}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BlogIndexer</RootNamespace>
-    <AssemblyName>BlogIndexer</AssemblyName>
+    <RootNamespace>MiniBlog.BlogIndexer</RootNamespace>
+    <AssemblyName>MiniBlog.BlogIndexer</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
