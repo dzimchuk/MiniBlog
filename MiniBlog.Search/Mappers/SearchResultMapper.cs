@@ -22,6 +22,9 @@ namespace MiniBlog.Search.Mappers
             Mapper.CreateMap<Microsoft.Azure.Search.Models.HitHighlights, HitHighlights>()
                   .ConvertUsing(searchHighlights =>
                                 {
+                                    if (searchHighlights == null)
+                                        return null;
+
                                     var highlights = new HitHighlights();
                                     foreach (var key in searchHighlights.Keys)
                                     {
