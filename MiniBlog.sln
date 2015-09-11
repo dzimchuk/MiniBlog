@@ -51,6 +51,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniBlog.BlogIndexer", "Min
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniBlog.Backup", "MiniBlog.Backup\MiniBlog.Backup.csproj", "{F4CEE9E3-DC27-4696-B29B-2363B02FD1C4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniBlog.ImageOptimizer", "MiniBlog.ImageOptimizer\MiniBlog.ImageOptimizer.csproj", "{58D343C4-A5E7-42D4-BA0E-B166D93BA43A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -97,6 +99,10 @@ Global
 		{F4CEE9E3-DC27-4696-B29B-2363B02FD1C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F4CEE9E3-DC27-4696-B29B-2363B02FD1C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F4CEE9E3-DC27-4696-B29B-2363B02FD1C4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58D343C4-A5E7-42D4-BA0E-B166D93BA43A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58D343C4-A5E7-42D4-BA0E-B166D93BA43A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58D343C4-A5E7-42D4-BA0E-B166D93BA43A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58D343C4-A5E7-42D4-BA0E-B166D93BA43A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
