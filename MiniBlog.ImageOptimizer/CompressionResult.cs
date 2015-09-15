@@ -6,7 +6,7 @@ using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace MiniBlog.ImageOptimizer
 {
-    internal class CompressionResult : IDisposable
+    internal class CompressionResult
     {
         public CompressionResult(string originalFileName, string resultFileName)
         {
@@ -23,14 +23,14 @@ namespace MiniBlog.ImageOptimizer
                 throw new Exception($"{originalFileName} does not exist.");
             }
 
-            if (result.Exists)
+            if (result.Exists && result.Length > 0L)
             {
                 ResultFileName = result.FullName;
                 ResultFileSize = result.Length;
             }
             else
             {
-                throw new Exception($"{resultFileName} does not exist.");
+                throw new Exception($"{resultFileName} does not exist or is empty.");
             }
         }
 
@@ -46,21 +46,11 @@ namespace MiniBlog.ImageOptimizer
         public override string ToString()
         {
             var builder = new StringBuilder();
-            builder.AppendLine("Optimized " + Path.GetFileName(OriginalFileName));
             builder.AppendLine("Before: " + OriginalFileSize + " bytes");
             builder.AppendLine("After: " + ResultFileSize + " bytes");
             builder.AppendLine("Saving: " + Saving + " bytes / " + Percent + "%");
 
             return builder.ToString();
-        }
-
-        public void Dispose()
-        {
-            if (File.Exists(OriginalFileName))
-                File.Delete(OriginalFileName);
-
-            if (File.Exists(ResultFileName))
-                File.Delete(ResultFileName);
         }
 
         public Task UploadResultFileAsync(ICloudBlob blob)

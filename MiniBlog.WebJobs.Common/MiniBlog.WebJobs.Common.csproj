@@ -83,6 +83,7 @@
     <Compile Include="ConfigurationBasedNameResolver.cs" />
     <Compile Include="LightInjectJobActivator.cs" />
     <Compile Include="JobHostConfigurationFactory.cs" />
+    <Compile Include="Model\PoisonBlobMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
