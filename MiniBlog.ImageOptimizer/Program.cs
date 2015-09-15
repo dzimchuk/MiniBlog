@@ -12,7 +12,10 @@ namespace MiniBlog.ImageOptimizer
             var container = InitializeLightInject();
             var configurationFactory = new JobHostConfigurationFactory(container);
 
-            var host = new JobHost(configurationFactory.Create());
+            var configuration = configurationFactory.Create();
+            configuration.Queues.BatchSize = 1;
+
+            var host = new JobHost(configuration);
             host.RunAndBlock();
         }
 
