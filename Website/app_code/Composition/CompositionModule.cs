@@ -11,5 +11,7 @@ public class CompositionModule : ICompositionRoot
         serviceRegistry.Register<IPostStorage, LocalPostStorage>();
         serviceRegistry.Register<IStorageAdapter, CachingPostStorage>();
         serviceRegistry.Register<IPostMapper, PostMapper>();
+
+        serviceRegistry.Register<OptimizedImageService>(new PerContainerLifetime());
     }
 }

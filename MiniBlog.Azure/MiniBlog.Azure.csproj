@@ -81,14 +81,18 @@
     <Compile Include="CdnFileStorage.cs" />
     <Compile Include="Composition\CompositionModule.cs" />
     <Compile Include="IBlobContainerFactory.cs" />
+    <Compile Include="ICloudTableFactory.cs" />
+    <Compile Include="OptimizedImageMapProvider.cs" />
     <Compile Include="PostSerializerExtensions.cs" />
     <Compile Include="PostStorage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Queries\GetOptimizedImageMapQuery.cs" />
     <Compile Include="Queries\ListLocalPostsQuery.cs" />
     <Compile Include="SearchIndexService.cs" />
     <Compile Include="Util\BlobContainerFactory.cs" />
     <Compile Include="Util\CloudQueueFactory.cs" />
     <Compile Include="ICloudQueueFactory.cs" />
+    <Compile Include="Util\CloudTableFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MiniBlog.Contracts\MiniBlog.Contracts.csproj">

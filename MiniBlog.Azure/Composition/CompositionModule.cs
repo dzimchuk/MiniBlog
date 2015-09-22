@@ -16,8 +16,10 @@ namespace MiniBlog.Azure.Composition
 
             serviceRegistry.Register<IBlobContainerFactory, BlobContainerFactory>();
             serviceRegistry.Register<ICloudQueueFactory, CloudQueueFactory>();
+            serviceRegistry.Register<ICloudTableFactory, CloudTableFactory>();
 
             serviceRegistry.Register<ISearchIndexService, SearchIndexService>();
+            serviceRegistry.Register<IOptimizedImageMapProvider, OptimizedImageMapProvider>();
         }
     }
 }

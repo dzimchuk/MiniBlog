@@ -48,6 +48,7 @@
     <Compile Include="IAuthenticationService.cs" />
     <Compile Include="Framework\ICommand.cs" />
     <Compile Include="ILocalPathProvider.cs" />
+    <Compile Include="IOptimizedImageMapProvider.cs" />
     <Compile Include="IPostSerializer.cs" />
     <Compile Include="IPostStorage.cs" />
     <Compile Include="Framework\IConfiguration.cs" />

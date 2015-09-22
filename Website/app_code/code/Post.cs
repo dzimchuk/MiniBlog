@@ -5,10 +5,16 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
 using CookComputing.XmlRpc;
+using Microsoft.Practices.ServiceLocation;
+using MiniBlog.Contracts;
+using MiniBlog.Contracts.Framework;
 
 [XmlRpcMissingMapping(MappingAction.Ignore)]
 public class Post
 {
+    private static readonly OptimizedImageService OptimizedImageService = ServiceLocator.Current.GetInstance<OptimizedImageService>();
+    private static readonly IConfiguration Configuration = ServiceLocator.Current.GetInstance<IConfiguration>();
+
     public Post()
     {
         ID = Guid.NewGuid().ToString();
@@ -82,7 +88,7 @@ public class Post
     public string GetHtmlContent()
     {
         var result = HandleYoutube(Content);
-        result = HandleImageCdn(result);
+        result = HandleOptimizedImages(result);
 
         return result;
     }
@@ -94,27 +100,25 @@ public class Post
         return Regex.Replace(content, @"\[youtube:(.*?)\]", (Match m) => string.Format(video, m.Groups[1].Value));
     }
 
-    private static string HandleImageCdn(string content)
+    private static string HandleOptimizedImages(string content)
     {
-        // Images replaced by CDN paths if they are located in the /posts/ folder
-        var cdn = ConfigurationManager.AppSettings.Get("blog:cdnUrl");
-        var root = ConfigurationManager.AppSettings.Get("blog:path") + "/posts/";
-
-        if (!root.StartsWith("/"))
-            root = "/" + root;
-
         return Regex.Replace(content, "<img.*?src=\"([^\"]+)\"", (Match m) =>
-                                                                 {
-                                                                     string src = m.Groups[1].Value;
-                                                                     int index = src.IndexOf(root);
+        {
+            var src = m.Groups[1].Value;
+            var index = src.IndexOf(Configuration.Find(Constants.FileContainerKey), StringComparison.Ordinal);
 
-                                                                     if (index > -1)
-                                                                     {
-                                                                         string clean = src.Substring(index);
-                                                                         return m.Value.Replace(src, cdn + clean);
-                                                                     }
+            if (index > -1)
+            {
+                var imagePath = src.Substring(index);
+                var optimizedImagePath = OptimizedImageService.FindOptimizedImagePath(imagePath);
+                if (!string.IsNullOrEmpty(optimizedImagePath))
+                {
+                    var leftPart = index > 0 ? src.Substring(0, index) : string.Empty;
+                    return m.Value.Replace(src, leftPart + optimizedImagePath);
+                }
+            }
 
-                                                                     return m.Value;
-                                                                 });
+            return m.Value;
+        });
     }
 }
