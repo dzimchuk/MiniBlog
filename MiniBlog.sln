@@ -7,7 +7,7 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "Website", "http://localhost
 	ProjectSection(WebsiteProperties) = preProject
 		UseIISExpress = "true"
 		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.6"
-		ProjectReferences = "{492c9e12-9f38-462b-9c42-602bdb51c53d}|MiniBlog.Contracts.dll;{78a67265-5015-4bc5-a737-56e32f72877f}|MiniBlog.Azure.dll;{95637681-4f48-4e2f-82ce-c631f9394eef}|MiniBlog.Services.dll;{21b2968a-ff0a-435a-b502-3cf2840f23c9}|MiniBlog.Search.dll;"
+		ProjectReferences = "{492c9e12-9f38-462b-9c42-602bdb51c53d}|MiniBlog.Contracts.dll;{78a67265-5015-4bc5-a737-56e32f72877f}|MiniBlog.Azure.dll;{95637681-4f48-4e2f-82ce-c631f9394eef}|MiniBlog.Services.dll;"
 		Debug.AspNetCompiler.VirtualPath = "/localhost_36123"
 		Debug.AspNetCompiler.PhysicalPath = "Website\"
 		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_36123\"
@@ -24,6 +24,9 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "Website", "http://localhost
 		Release.AspNetCompiler.Debug = "False"
 		SlnRelativePath = "Website\"
 		DefaultWebSiteLanguage = "Visual C#"
+	EndProjectSection
+	ProjectSection(ProjectDependencies) = postProject
+		{21B2968A-FF0A-435A-B502-3CF2840F23C9} = {21B2968A-FF0A-435A-B502-3CF2840F23C9}
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C6A4C914-CC97-4804-ACA1-B8A0E61CE333}"
