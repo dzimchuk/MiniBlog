@@ -101,6 +101,9 @@
     <None Include="packages.config" />
     <None Include="Properties\PublishProfiles\dzimchuk.pubxml" />
     <None Include="Properties\webjob-publish-settings.json" />
+    <None Include="settings.job">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MiniBlog.Contracts\MiniBlog.Contracts.csproj">
