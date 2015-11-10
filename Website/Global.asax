@@ -1,6 +1,7 @@
 ﻿<%@ Application Language="C#" %>
 <%@ Import Namespace="LightInject" %>
 <%@ Import Namespace="LightInject.ServiceLocation" %>
+<%@ Import Namespace="Microsoft.ApplicationInsights" %>
 <%@ Import Namespace="Microsoft.ApplicationInsights.Extensibility" %>
 <%@ Import Namespace="Microsoft.Practices.ServiceLocation" %>
 <%@ Import Namespace="MiniBlog.Contracts.Framework" %>
@@ -58,17 +59,28 @@
     public void Application_OnError()
     {
         var request = HttpContext.Current.Request;
-        var exception = Server.GetLastError() as HttpException;
-        if (exception == null) return;
+        var exception = Server.GetLastError();
 
+        if (HttpContext.Current.IsCustomErrorEnabled && exception != null)
+        {
+            var telemetryClient = new TelemetryClient();
+            telemetryClient.TrackException(exception);
+        }
+
+        var httpException = exception as HttpException;
+        if (httpException == null)
+        {
+            return;
+        }
+        
         //Prevents customError behavior when the request is determined to be an AJAX request.
         if (request["X-Requested-With"] == "XMLHttpRequest" || request.Headers["X-Requested-With"] == "XMLHttpRequest")
         {
             Server.ClearError();
             Response.ClearContent();
-            Response.StatusCode = exception.GetHttpCode();
-            Response.StatusDescription = exception.Message;
-            Response.Write(string.Format("<html><body><h1>{0} {1}</h1></body></html>", exception.GetHttpCode(), exception.Message));
+            Response.StatusCode = httpException.GetHttpCode();
+            Response.StatusDescription = httpException.Message;
+            Response.Write(string.Format("<html><body><h1>{0} {1}</h1></body></html>", httpException.GetHttpCode(), httpException.Message));
         }
     }
 
