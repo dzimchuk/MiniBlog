@@ -1,7 +1,9 @@
 ﻿<%@ Application Language="C#" %>
 <%@ Import Namespace="LightInject" %>
 <%@ Import Namespace="LightInject.ServiceLocation" %>
+<%@ Import Namespace="Microsoft.ApplicationInsights.Extensibility" %>
 <%@ Import Namespace="Microsoft.Practices.ServiceLocation" %>
+<%@ Import Namespace="MiniBlog.Contracts.Framework" %>
 
 <script RunAt="server">
 
@@ -20,6 +22,12 @@
 
     public void Application_Start(object sender, EventArgs e)
     {
+        ConfigureDependencies();
+        ConfigureApplicationInsights();
+    }
+
+    private static void ConfigureDependencies()
+    {
         var container = new ServiceContainer();
         container.RegisterFrom<MiniBlog.Services.Composition.CompositionModule>();
         container.RegisterFrom<CompositionModule>();
@@ -27,6 +35,12 @@
         container.RegisterAssembly("MiniBlog.Search.dll");
 
         ServiceLocator.SetLocatorProvider(() => new LightInjectServiceLocator(container));
+    }
+
+    private static void ConfigureApplicationInsights()
+    {
+        var configuration = ServiceLocator.Current.GetInstance<IConfiguration>();
+        TelemetryConfiguration.Active.InstrumentationKey = configuration.Find("appinsights:instrumentationKey");
     }
 
     public void Application_BeginRequest(object sender, EventArgs e)
