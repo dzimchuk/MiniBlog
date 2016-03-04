@@ -21,8 +21,6 @@ namespace MiniBlog.Azure.Commands
             var content = postSerializer.SerializeAsByteArray(post);
 
             var blob = model.GetBlockBlobReference(post.GetFileName());
-            blob.Properties.ContentType = "text/xml";
-
             blob.UploadFromByteArray(content, 0, content.Length);
         }
     }

@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 using Microsoft.Azure.Search;
 using Microsoft.Azure.Search.Models;
 using Microsoft.Azure.WebJobs;
@@ -73,27 +72,23 @@ namespace MiniBlog.BlogIndexer
                     await log.WriteLineAsync($"'{item.Uri}' is not a block blob.");
                     continue;
                 }
-
-                var doc = await DownloadAsync(blob);
-                var post = postSerializer.Deserialize(doc, Path.GetFileNameWithoutExtension(GetBlobName(item)));
-
+                
+                var post = await DownloadAsync(blob);
                 posts.Add(post);
             }
 
             await UploadPostsAsync(posts, log);
         }
 
-        private static async Task<XElement> DownloadAsync(CloudBlockBlob blob)
+        private async Task<Post> DownloadAsync(CloudBlockBlob blob)
         {
-            XElement doc;
             using (var stream = new MemoryStream())
             {
                 await blob.DownloadToStreamAsync(stream);
                 stream.Position = 0;
 
-                doc = XElement.Load(stream);
+                return postSerializer.Deserialize(stream, Path.GetFileNameWithoutExtension(GetBlobName(blob)));
             }
-            return doc;
         }
 
         private async Task DeleteIndexAsync(string indexName, TextWriter log)

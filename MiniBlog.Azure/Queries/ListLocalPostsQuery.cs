@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Xml.Linq;
 using MiniBlog.Contracts;
 using MiniBlog.Contracts.Framework;
 using MiniBlog.Contracts.Model;
@@ -20,12 +19,13 @@ namespace MiniBlog.Azure.Queries
         {
             var list = new List<Post>();
 
-            foreach (var file in Directory.EnumerateFiles(model, "*.xml", SearchOption.TopDirectoryOnly))
+            foreach (var file in Directory.EnumerateFiles(model, $"*{Constants.PostFileExtension}", SearchOption.TopDirectoryOnly))
             {
-                var doc = XElement.Load(file);
-                var post = postSerializer.Deserialize(doc, Path.GetFileNameWithoutExtension(file));
-
-                list.Add(post);
+                using (var stream = File.OpenRead(file))
+                {
+                    var post = postSerializer.Deserialize(stream, Path.GetFileNameWithoutExtension(file));
+                    list.Add(post);
+                }
             }
 
             return list;

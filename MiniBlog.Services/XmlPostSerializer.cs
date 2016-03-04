@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
+using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using MiniBlog.Contracts;
@@ -8,9 +10,9 @@ using MiniBlog.Contracts.Model;
 
 namespace MiniBlog.Services
 {
-    internal class PostSerializer : IPostSerializer
+    internal class XmlPostSerializer : IPostSerializer
     {
-        public XDocument Serialize(Post post)
+        public void Serialize(Post post, Stream stream)
         {
             var doc = new XDocument(
                 new XElement("post",
@@ -50,11 +52,15 @@ namespace MiniBlog.Services
                         ));
             }
 
-            return doc;
+            using (var writer = XmlWriter.Create(stream))
+            {
+                doc.WriteTo(writer);
+            }
         }
 
-        public Post Deserialize(XElement doc, string postId)
+        public Post Deserialize(Stream stream, string postId)
         {
+            var doc = XElement.Load(stream);
             var post = new Post()
                        {
                            Id = postId,

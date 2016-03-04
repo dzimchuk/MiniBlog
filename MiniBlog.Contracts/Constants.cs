@@ -13,5 +13,7 @@
 
         public const string IndexQueueKey = "search:indexQueue";
         public const string DeleteQueueKey = "search:deleteQueue";
+
+        public const string PostFileExtension = ".xml";
     }
 }

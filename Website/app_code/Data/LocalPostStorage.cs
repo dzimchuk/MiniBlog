@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Web.Hosting;
-using System.Xml.Linq;
 using MiniBlog.Contracts;
 using BlogPost = MiniBlog.Contracts.Model.Post;
 
@@ -26,10 +25,10 @@ namespace Data
         public void Save(BlogPost post)
         {
             post.LastModified = DateTime.UtcNow;
-            var doc = postSerializer.Serialize(post);
-
-            var file = GetFileName(post);
-            doc.Save(file);
+            using (var stream = File.OpenWrite(GetFileName(post)))
+            {
+                postSerializer.Serialize(post, stream);
+            }
         }
 
         public void Delete(BlogPost post)
@@ -45,12 +44,13 @@ namespace Data
 
             var list = new List<BlogPost>();
             
-            foreach (var file in Directory.EnumerateFiles(Folder, "*.xml", SearchOption.TopDirectoryOnly))
+            foreach (var file in Directory.EnumerateFiles(Folder, string.Format("*{0}", Constants.PostFileExtension), SearchOption.TopDirectoryOnly))
             {
-                var doc = XElement.Load(file);
-                var post = postSerializer.Deserialize(doc, Path.GetFileNameWithoutExtension(file));
-
-                list.Add(post);
+                using (var stream = File.OpenRead(file))
+                {
+                    var post = postSerializer.Deserialize(stream, Path.GetFileNameWithoutExtension(file));
+                    list.Add(post);
+                }
             }
 
             return list;

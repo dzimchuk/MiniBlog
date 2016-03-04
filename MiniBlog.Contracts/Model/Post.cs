@@ -19,7 +19,7 @@ namespace MiniBlog.Contracts.Model
 
         public string GetFileName()
         {
-            return $"{Id}.xml";
+            return $"{Id}{Constants.PostFileExtension}";
         }
     }
 }

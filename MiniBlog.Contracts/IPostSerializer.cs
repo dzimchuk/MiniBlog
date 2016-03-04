@@ -1,11 +1,11 @@
-﻿using System.Xml.Linq;
+﻿using System.IO;
 using MiniBlog.Contracts.Model;
 
 namespace MiniBlog.Contracts
 {
     public interface IPostSerializer
     {
-        XDocument Serialize(Post post);
-        Post Deserialize(XElement doc, string postId);
+        void Serialize(Post post, Stream stream);
+        Post Deserialize(Stream stream, string postId);
     }
 }

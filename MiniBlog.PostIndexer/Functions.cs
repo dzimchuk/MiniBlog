@@ -1,6 +1,5 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 using Microsoft.Azure.Search;
 using Microsoft.Azure.Search.Models;
 using Microsoft.Azure.WebJobs;
@@ -25,9 +24,8 @@ namespace MiniBlog.PostIndexer
                                          TextWriter log)
         {
             await log.WriteLineAsync($"Indexing post {message}...");
-
-            var doc = XElement.Load(stream);
-            var post = postSerializer.Deserialize(doc, Path.GetFileNameWithoutExtension(message));
+            
+            var post = postSerializer.Deserialize(stream, Path.GetFileNameWithoutExtension(message));
 
             var action = new IndexAction(post.ToDocument());
             await searchIndexClient.IndexWithRetryAsync(action);
