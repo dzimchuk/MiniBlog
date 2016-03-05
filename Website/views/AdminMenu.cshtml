@@ -20,48 +20,9 @@
         <div id="tools">
 
             <div class="btn-group">
-                <a class="btn btn-mini" data-edit="formatBlock <p>">&para;</a>
-                <a class="btn btn-mini" data-edit="formatBlock <h1>">H1</a>
-                <a class="btn btn-mini" data-edit="formatBlock <h2>">H2</a>
-                <a class="btn btn-mini" data-edit="formatBlock <h3>">H3</a>
-            </div>
-
-            <div class="btn-group">
-                <a class="btn btn-mini" data-edit="italic"><em>I</em></a>
-                <a class="btn btn-mini" data-edit="bold"><strong>B</strong></a>
-                <a class="btn btn-mini" data-edit="underline"><ins>U</ins></a>
-                <a class="btn btn-mini" data-edit="strikethrough"><s>S</s></a>
-            </div>
-
-            <div class="btn-group">
-                <a class="btn btn-mini" data-edit="justifyleft" title="Justify left"><i class="glyphicon glyphicon-align-left"></i></a>
-                <a class="btn btn-mini" data-edit="justifycenter" title="Justify center"><i class="glyphicon glyphicon-align-center"></i></a>
-                <a class="btn btn-mini" data-edit="justifyright" title="Justify right"><i class="glyphicon glyphicon-align-right"></i></a>
-                <a class="btn btn-mini" data-edit="justifyfull" title="Justify full"><i class="glyphicon glyphicon-align-justify"></i></a>
-            </div>
-
-            <div class="btn-group">
-                <a class="btn btn-mini" data-edit="insertunorderedlist" title="Bullet points"><i class="glyphicon glyphicon-list"></i></a>
-                <a class="btn btn-mini" data-edit="insertorderedlist" title="Numbered bullet points"><i class="glyphicon glyphicon-th-list"></i></a>
-                <a class="btn btn-mini" data-edit="outdent" title="Indent left"><i class="glyphicon glyphicon-indent-left"></i></a>
-                <a class="btn btn-mini" data-edit="indent" title="Indent right"><i class="glyphicon glyphicon-indent-right"></i></a>
-            </div>
-
-            <div class="btn-group">
-                <a class="btn btn-mini dropdown-toggle" data-toggle="dropdown" title="Hyperlink"><i class="glyphicon glyphicon-globe"></i></a>
-                <div class="dropdown-menu row" role="menu">
-                    <input class="col-md-9 col-lg-9" placeholder="URL" type="text" data-edit="createLink" />
-                    <button class="btn btn-xs col-md-3 col-lg-3" type="button">Add</button>
-                </div>
-                <a class="btn btn-mini" data-edit="unlink" title="Remove hyperlink"><i class="glyphicon glyphicon-remove"></i></a>
-                <a class="btn btn-mini uploadimage"><i class="glyphicon glyphicon-picture"></i></a>
-            </div>
-
-            <input type="file" id="txtImage" data-edit="insertImage" style="width:0; height: 0;position:absolute" />
-
-            <div class="btn-group">
                 <a class="btn btn-mini source" data-cmd="source" title="Toggle source/design view"><i class="glyphicon glyphicon-eye-open"></i></a>
             </div>
+
         </div>
     </div>
 
@@ -81,8 +42,6 @@
 @if (!string.IsNullOrEmpty(Blog.CurrentSlug))
 {
     <script src="@Blog.FingerPrint("/scripts/jquery-2.1.4.js", "//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js")"></script>
-    <script src="@Blog.FingerPrint("/scripts/jquery.hotkeys.js")"></script>
     <script src="@Blog.FingerPrint("/scripts/bootstrap.min.js", "//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js")"></script>
-    <script src="@Blog.FingerPrint("/scripts/bootstrap-wysiwyg.js")" defer></script>
     <script src="@Blog.FingerPrint("/scripts/admin.js")" defer></script>
 }

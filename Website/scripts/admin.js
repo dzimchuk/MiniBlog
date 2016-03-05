@@ -1,27 +1,7 @@
 ﻿(function ($) {
-
-    // #region Helpers
-
-    function ConvertMarkupToValidXhtml(markup) {
-        var docImplementation = document.implementation;
-        var htmlDocument = docImplementation.createHTMLDocument("temp");
-        var xHtmlDocument = docImplementation.createDocument('http://www.w3.org/1999/xhtml', 'html', null);
-        var xhtmlBody = xHtmlDocument.createElementNS('http://www.w3.org/1999/xhtml', 'body');
-
-        htmlDocument.body.innerHTML = "<div>" + markup + "</div>";
-
-        xHtmlDocument.documentElement.appendChild(xhtmlBody);
-        xHtmlDocument.importNode(htmlDocument.body, true);
-        xhtmlBody.appendChild(htmlDocument.body.firstChild);
-
-        /<body.*?><div>([\s\S]*?)<\/div><\/body>/i.exec(xHtmlDocument.documentElement.innerHTML);
-        return RegExp.$1;
-    }
-
-    // #endregion
-
+    
     var postId, isNew,
-        txtTitle, txtExcerpt, txtContent, txtMessage, txtImage, chkPublish,
+        txtTitle, txtExcerpt, txtContent, txtMessage, chkPublish,
         btnNew, btnEdit, btnDelete, btnSave, btnCancel, blogPath,
 
     editPost = function () {
@@ -29,7 +9,6 @@
         txtExcerpt.attr('contentEditable', true);
         txtExcerpt.css({ minHeight: "100px" });
         txtExcerpt.parent().css('display', 'block');
-        txtContent.wysiwyg({ hotKeys: {}, activeToolbarClass: "active" });
         txtContent.css({ minHeight: "400px" });
         txtContent.focus();
 
@@ -56,48 +35,30 @@
         }
     },
     toggleSourceView = function () {
-        $(".source").bind("click", function () {
-            var self = $(this);
-            if (self.attr("data-cmd") === "source") {
-                self.attr("data-cmd", "design");
-                self.addClass("active");
-                txtContent.text(txtContent.html());
-            } else {
-                self.attr("data-cmd", "source");
-                self.removeClass("active");
-                txtContent.html(txtContent.text());
-            }
-        });
+        //$(".source").bind("click", function () {
+        //    var self = $(this);
+        //    if (self.attr("data-cmd") === "source") {
+        //        self.attr("data-cmd", "design");
+        //        self.addClass("active");
+        //        txtContent.text(txtContent.html());
+        //    } else {
+        //        self.attr("data-cmd", "source");
+        //        self.removeClass("active");
+        //        txtContent.html(txtContent.text());
+        //    }
+        //});
     },
     savePost = function (e) {
         if ($(".source").attr("data-cmd") === "design") {
             $(".source").click();
         }
-
-        txtContent.cleanHtml();
-
-        var parsedDOM;
-
-        /*  IE9 doesn't support text/html MimeType https://github.com/madskristensen/MiniBlog/issues/35
         
-            parsedDOM = new DOMParser().parseFromString(txtContent.html(), 'text/html');
-            parsedDOM = new XMLSerializer().serializeToString(parsedDOM);
-
-            /<body>(.*)<\/body>/im.exec(parsedDOM);
-            parsedDOM = RegExp.$1;
-        
-        */
-
-        /* When its time to drop IE9 support toggle commented region with 
-           the following statement and ConvertMarkupToXhtml function */
-        parsedDOM = ConvertMarkupToValidXhtml(txtContent.html());
-
         $.post(blogPath + "/post.ashx?mode=save", {
             id: postId,
             isPublished: chkPublish[0].checked,
             title: txtTitle.text().trim(),
             excerpt: txtExcerpt.text().trim(),
-            content: parsedDOM,
+            content: txtContent.text().trim(),
             categories: getPostCategories(),
             __RequestVerificationToken: document.querySelector("input[name=__RequestVerificationToken]").getAttribute("value")
         })
@@ -180,9 +141,8 @@
 
     txtTitle = $("[itemprop~='blogPost'] [itemprop~='name']");
     txtExcerpt = $("[itemprop~='description']");
-    txtContent = $("[itemprop~='articleBody']");
+    txtContent = $("[itemprop~='articleBody'] > textarea");
     txtMessage = $("#admin .alert");
-    txtImage = $("#admin #txtImage");
 
     btnNew = $("#btnNew");
     btnEdit = $("#btnEdit");
@@ -193,22 +153,7 @@
     blogPath = $("#admin").data("blogPath");
 
     isNew = location.pathname.replace(/\//g, "") === blogPath.replace(/\//g, "") + "postnew";
-
-    $(document).keyup(function (e) {
-        if (!document.activeElement.isContentEditable) {
-            if (e.keyCode === 46) { // Delete key
-                deletePost();
-            } else if (e.keyCode === 27) { // ESC key
-                cancelEdit();
-            }
-        }
-    });
-
-    $('.uploadimage').click(function (e) {
-        e.preventDefault();
-        $('#txtImage').click();
-    });
-
+    
     if (isNew) {
         editPost();
         $("#ispublished").fadeIn();
@@ -222,7 +167,4 @@
         $("#ispublished").css({ "display": "inline" });
     }
 
-    $(".dropdown-menu > input").click(function (e) {
-        e.stopPropagation();
-    });
 })(jQuery);
