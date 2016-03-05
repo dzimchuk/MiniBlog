@@ -2,18 +2,28 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Web;
+using CommonMark;
 using CookComputing.XmlRpc;
 using Microsoft.Practices.ServiceLocation;
-using MiniBlog.Contracts;
 using MiniBlog.Contracts.Framework;
+using Util;
 
 [XmlRpcMissingMapping(MappingAction.Ignore)]
 public class Post
 {
-    private static readonly OptimizedImageService OptimizedImageService = ServiceLocator.Current.GetInstance<OptimizedImageService>();
-    private static readonly IConfiguration Configuration = ServiceLocator.Current.GetInstance<IConfiguration>();
+    private static readonly CommonMarkSettings CustomCommonMarkSettings;
+    private string htmlContent;
+    private string content;
+
+    static Post()
+    {
+        var optimizedImageService = ServiceLocator.Current.GetInstance<OptimizedImageService>();
+        var configuration = ServiceLocator.Current.GetInstance<IConfiguration>();
+
+        CustomCommonMarkSettings = CommonMarkSettings.Default.Clone();
+        CustomCommonMarkSettings.OutputDelegate = (doc, output, settings) => new CustomHtmlFormatter(output, settings, optimizedImageService, configuration).WriteDocument(doc);
+    }
 
     public Post()
     {
@@ -44,13 +54,21 @@ public class Post
     public string Excerpt { get; set; }
 
     [XmlRpcMember("description")]
-    public string Content { get; set; }
+    public string Content
+    {
+        get { return content; }
+        set
+        {
+            content = value;
+            htmlContent = null;
+        }
+    }
 
     [XmlRpcMember("dateCreated")]
-    public DateTime PubDate { get; set; }
+    public DateTimeOffset PubDate { get; set; }
 
     [XmlRpcMember("dateModified")]
-    public DateTime LastModified { get; set; }
+    public DateTimeOffset LastModified { get; set; }
 
     public bool IsPublished { get; set; }
 
@@ -87,38 +105,9 @@ public class Post
 
     public string GetHtmlContent()
     {
-        var result = HandleYoutube(Content);
-        result = HandleOptimizedImages(result);
+        if (string.IsNullOrEmpty(htmlContent))
+            htmlContent = CommonMarkConverter.Convert(Content, CustomCommonMarkSettings);
 
-        return result;
-    }
-
-    private static string HandleYoutube(string content)
-    {
-        // Youtube content embedded using this syntax: [youtube:xyzAbc123]
-        const string video = "<div class=\"video\"><iframe src=\"//www.youtube.com/embed/{0}?modestbranding=1&amp;theme=light\" allowfullscreen></iframe></div>";
-        return Regex.Replace(content, @"\[youtube:(.*?)\]", (Match m) => string.Format(video, m.Groups[1].Value));
-    }
-
-    private static string HandleOptimizedImages(string content)
-    {
-        return Regex.Replace(content, "<img.*?src=\"([^\"]+)\"", (Match m) =>
-        {
-            var src = m.Groups[1].Value;
-            var index = src.IndexOf(Configuration.Find(Constants.FileContainerKey), StringComparison.Ordinal);
-
-            if (index > -1)
-            {
-                var imagePath = src.Substring(index);
-                var optimizedImagePath = OptimizedImageService.FindOptimizedImagePath(imagePath);
-                if (!string.IsNullOrEmpty(optimizedImagePath))
-                {
-                    var leftPart = index > 0 ? src.Substring(0, index) : string.Empty;
-                    return m.Value.Replace(src, leftPart + optimizedImagePath);
-                }
-            }
-
-            return m.Value;
-        });
+        return htmlContent;
     }
 }

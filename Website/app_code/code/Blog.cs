@@ -220,15 +220,15 @@ public static class Blog
         return HttpRuntime.Cache[rootRelativePath] as string;
     }
 
-    public static void SetConditionalGetHeaders(DateTime lastModified, HttpContextBase context)
+    public static void SetConditionalGetHeaders(DateTimeOffset lastModified, HttpContextBase context)
     {
         HttpResponseBase response = context.Response;
         HttpRequestBase request = context.Request;
-        lastModified = new DateTime(lastModified.Year, lastModified.Month, lastModified.Day, lastModified.Hour, lastModified.Minute, lastModified.Second);
+        lastModified = new DateTimeOffset(lastModified.Year, lastModified.Month, lastModified.Day, lastModified.Hour, lastModified.Minute, lastModified.Second, lastModified.Offset);
 
         string incomingDate = request.Headers["If-Modified-Since"];
 
-        response.Cache.SetLastModified(lastModified);
+        response.Cache.SetLastModified(lastModified.DateTime);
 
         DateTime testDate = DateTime.MinValue;
 

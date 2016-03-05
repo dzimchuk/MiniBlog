@@ -10,7 +10,7 @@ namespace MiniBlog.Services.Composition
         {
             serviceRegistry.Register<IConfiguration, Configuration>();
             serviceRegistry.Register<ILocalPathProvider, LocalPathProvider>();
-            serviceRegistry.Register<IPostSerializer, XmlPostSerializer>();
+            serviceRegistry.Register<IPostSerializer, JsonPostSerializer>();
             serviceRegistry.Register<IAuthenticationService, AuthenticationService>();
         }
     }

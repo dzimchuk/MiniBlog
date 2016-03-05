@@ -53,6 +53,7 @@
     <Compile Include="AuthenticationService.cs" />
     <Compile Include="Composition\CompositionModule.cs" />
     <Compile Include="Configuration.cs" />
+    <Compile Include="JsonPostSerializer.cs" />
     <Compile Include="LocalPathProvider.cs" />
     <Compile Include="XmlPostSerializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
