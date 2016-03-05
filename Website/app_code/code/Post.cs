@@ -4,12 +4,10 @@ using System.Configuration;
 using System.Linq;
 using System.Web;
 using CommonMark;
-using CookComputing.XmlRpc;
 using Microsoft.Practices.ServiceLocation;
 using MiniBlog.Contracts.Framework;
 using Util;
 
-[XmlRpcMissingMapping(MappingAction.Ignore)]
 public class Post
 {
     private static readonly CommonMarkSettings CustomCommonMarkSettings;
@@ -35,25 +33,14 @@ public class Post
         LastModified = DateTime.UtcNow;
         Categories = new string[0];
         Comments = new List<Comment>();
-        IsPublished = true;
+        IsPublished = false;
     }
-
-    [XmlRpcMember("postid")]
+    
     public string ID { get; set; }
-
-    [XmlRpcMember("title")]
     public string Title { get; set; }
-
-    [XmlRpcMember("author")]
     public string Author { get; set; }
-
-    [XmlRpcMember("wp_slug")]
     public string Slug { get; set; }
-
-    [XmlRpcMember("mt_excerpt")]
     public string Excerpt { get; set; }
-
-    [XmlRpcMember("description")]
     public string Content
     {
         get { return content; }
@@ -63,16 +50,10 @@ public class Post
             htmlContent = null;
         }
     }
-
-    [XmlRpcMember("dateCreated")]
+    
     public DateTimeOffset PubDate { get; set; }
-
-    [XmlRpcMember("dateModified")]
     public DateTimeOffset LastModified { get; set; }
-
     public bool IsPublished { get; set; }
-
-    [XmlRpcMember("categories")]
     public string[] Categories { get; set; }
     public List<Comment> Comments { get; private set; }
 
