@@ -54,7 +54,7 @@ namespace Util
                         Write("\"");
                     }
 
-                    Write(" />");
+                    Write(">");
                 }
             }
             else
