@@ -8,34 +8,37 @@ namespace MiniBlog.Search.Mappers
     {
         static SearchResultMapper()
         {
-            Mapper.CreateMap<Microsoft.Azure.Search.Models.Document, Document>()
-                  .ConvertUsing(searchDocument =>
-                                {
-                                    var doc = new Document();
-                                    foreach (var key in searchDocument.Keys)
-                                    {
-                                        doc.Add(key, searchDocument[key]);
-                                    }
+            Mapper.Initialize(configuration =>
+                              {
+                                  configuration.CreateMap<Microsoft.Azure.Search.Models.Document, Document>()
+                                               .ConvertUsing(searchDocument =>
+                                                             {
+                                                                 var doc = new Document();
+                                                                 foreach (var key in searchDocument.Keys)
+                                                                 {
+                                                                     doc.Add(key, searchDocument[key]);
+                                                                 }
 
-                                    return doc;
-                                });
-            Mapper.CreateMap<Microsoft.Azure.Search.Models.HitHighlights, HitHighlights>()
-                  .ConvertUsing(searchHighlights =>
-                                {
-                                    if (searchHighlights == null)
-                                        return null;
+                                                                 return doc;
+                                                             });
+                                  configuration.CreateMap<Microsoft.Azure.Search.Models.HitHighlights, HitHighlights>()
+                                               .ConvertUsing(searchHighlights =>
+                                                             {
+                                                                 if (searchHighlights == null)
+                                                                     return null;
 
-                                    var highlights = new HitHighlights();
-                                    foreach (var key in searchHighlights.Keys)
-                                    {
-                                        highlights.Add(key, searchHighlights[key]);
-                                    }
+                                                                 var highlights = new HitHighlights();
+                                                                 foreach (var key in searchHighlights.Keys)
+                                                                 {
+                                                                     highlights.Add(key, searchHighlights[key]);
+                                                                 }
 
-                                    return highlights;
-                                });
-            Mapper.CreateMap<Microsoft.Azure.Search.Models.SearchResult, SearchResult>();
-            Mapper.CreateMap<Microsoft.Azure.Search.Models.SuggestResult, SuggestResult>();
-
+                                                                 return highlights;
+                                                             });
+                                  configuration.CreateMap<Microsoft.Azure.Search.Models.SearchResult, SearchResult>();
+                                  configuration.CreateMap<Microsoft.Azure.Search.Models.SuggestResult, SuggestResult>();
+                              });
+            
             Mapper.AssertConfigurationIsValid();
         }
 
