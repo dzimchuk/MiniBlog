@@ -81,14 +81,11 @@ public class Post
 
     public int CountApprovedComments(HttpContextBase context)
     {
-        return (Blog.ModerateComments && !context.User.Identity.IsAuthenticated) ? this.Comments.Count(c => c.IsApproved) : this.Comments.Count;
+        return (Blog.ModerateComments && !context.User.Identity.IsAuthenticated) ? Comments.Count(c => c.IsApproved) : this.Comments.Count;
     }
 
     public string GetHtmlContent()
     {
-        if (string.IsNullOrEmpty(htmlContent))
-            htmlContent = CommonMarkConverter.Convert(Content, CustomCommonMarkSettings);
-
-        return htmlContent;
+        return htmlContent ?? (htmlContent = CommonMarkConverter.Convert(Content, CustomCommonMarkSettings));
     }
 }

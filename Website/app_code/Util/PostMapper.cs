@@ -5,33 +5,36 @@ namespace Util
 {
     internal class PostMapper : IPostMapper
     {
-        static PostMapper()
+        private readonly IMapper mapper;
+        public PostMapper()
         {
-            Mapper.Initialize(configuration =>
-                              {
-                                  configuration.CreateMap<MiniBlog.Contracts.Model.Comment, Comment>()
-                                               .ForMember(dest => dest.ID, config => config.MapFrom(source => source.Id))
-                                               .ReverseMap()
-                                               .ForMember(dest => dest.Id, config => config.MapFrom(source => source.ID));
-                                  configuration.CreateMap<MiniBlog.Contracts.Model.Post, Post>()
-                                               .ForMember(dest => dest.ID, config => config.MapFrom(source => source.Id))
-                                               .ForMember(dest => dest.AbsoluteUrl, config => config.Ignore())
-                                               .ForMember(dest => dest.Url, config => config.Ignore())
-                                               .ReverseMap()
-                                               .ForMember(dest => dest.Id, config => config.MapFrom(source => source.ID));
-                              });
-            
-            Mapper.AssertConfigurationIsValid();
+            var configuration = new MapperConfiguration(cfg =>
+                                                        {
+                                                            cfg.CreateMap<MiniBlog.Contracts.Model.Comment, Comment>()
+                                                               .ForMember(dest => dest.ID, config => config.MapFrom(source => source.Id))
+                                                               .ReverseMap()
+                                                               .ForMember(dest => dest.Id, config => config.MapFrom(source => source.ID));
+
+                                                            cfg.CreateMap<MiniBlog.Contracts.Model.Post, Post>()
+                                                               .ForMember(dest => dest.ID, config => config.MapFrom(source => source.Id))
+                                                               .ForMember(dest => dest.AbsoluteUrl, config => config.Ignore())
+                                                               .ForMember(dest => dest.Url, config => config.Ignore())
+                                                               .ReverseMap()
+                                                               .ForMember(dest => dest.Id, config => config.MapFrom(source => source.ID));
+                                                        });
+
+            configuration.AssertConfigurationIsValid();
+            mapper = configuration.CreateMapper();
         }
 
         public Post MapFrom(MiniBlog.Contracts.Model.Post post)
         {
-            return Mapper.Map<Post>(post);
+            return mapper.Map<Post>(post);
         }
 
         public MiniBlog.Contracts.Model.Post MapFrom(Post post)
         {
-            return Mapper.Map<MiniBlog.Contracts.Model.Post>(post);
+            return mapper.Map<MiniBlog.Contracts.Model.Post>(post);
         }
     }
 }

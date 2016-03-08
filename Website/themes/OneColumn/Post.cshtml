@@ -24,7 +24,7 @@
     <div itemprop="articleBody">
         @if (Blog.IsEditing)
         {
-            <textarea>@Html.Raw(Model.Content)</textarea>
+            <textarea>@Model.Content</textarea>
         }
         else
         {
