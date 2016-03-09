@@ -17,7 +17,7 @@ internal class OptimizedImageService
 
     private void RefreshMap(object state)
     {
-        Interlocked.Exchange(ref optimizedImageMap, mapProvider.GetMap());
+        //Interlocked.Exchange(ref optimizedImageMap, mapProvider.GetMap());
     }
 
     public string FindOptimizedImagePath(string originalImagePath)
