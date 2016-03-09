@@ -103,11 +103,25 @@
     color:black;
 }
 
-[itemprop~='articleBody'] > textarea {
+#editBox {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
 
     width: 100%;
-    height: 100%;
+    min-height: 400px;
+}
+
+#editBox.showPreview {
+    display: none;
+}
+
+#editPreview {
+    width: 100%;
+    min-height: 400px;
+    display: none;
+}
+
+#editPreview.showPreview {
+    display: block;
 }

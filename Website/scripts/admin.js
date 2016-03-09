@@ -2,14 +2,13 @@
     
     var postId, isNew,
         txtTitle, txtExcerpt, txtContent, txtMessage, chkPublish,
-        btnNew, btnEdit, btnDelete, btnSave, btnCancel, blogPath,
+        btnNew, btnEdit, btnDelete, btnSave, btnCancel, blogPath, editControls, editPreview,
 
     editPost = function () {
         txtTitle.attr('contentEditable', true);
         txtExcerpt.attr('contentEditable', true);
         txtExcerpt.css({ minHeight: "100px" });
         txtExcerpt.parent().css('display', 'block');
-        txtContent.css({ minHeight: "400px" });
         txtContent.focus();
 
         btnNew.attr("disabled", true);
@@ -19,8 +18,6 @@
         chkPublish.removeAttr("disabled");
 
         showCategoriesForEditing();
-
-        toggleSourceView();
 
         $("#tools").fadeIn().css("display", "inline-block");
     },
@@ -34,25 +31,7 @@
             window.location = window.location.href.split(/\?|#/)[0];
         }
     },
-    toggleSourceView = function () {
-        //$(".source").bind("click", function () {
-        //    var self = $(this);
-        //    if (self.attr("data-cmd") === "source") {
-        //        self.attr("data-cmd", "design");
-        //        self.addClass("active");
-        //        txtContent.text(txtContent.html());
-        //    } else {
-        //        self.attr("data-cmd", "source");
-        //        self.removeClass("active");
-        //        txtContent.html(txtContent.text());
-        //    }
-        //});
-    },
     savePost = function (e) {
-        if ($(".source").attr("data-cmd") === "design") {
-            $(".source").click();
-        }
-        
         $.post(blogPath + "/post.ashx?mode=save", {
             id: postId,
             isPublished: chkPublish[0].checked,
@@ -143,7 +122,7 @@
     txtExcerpt = $("[itemprop~='description']");
     txtContent = $("[itemprop~='articleBody'] > textarea");
     txtMessage = $("#admin .alert");
-
+    
     btnNew = $("#btnNew");
     btnEdit = $("#btnEdit");
     btnDelete = $("#btnDelete").bind("click", deletePost);
@@ -151,6 +130,21 @@
     btnCancel = $("#btnCancel").bind("click", cancelEdit);
     chkPublish = $("#ispublished").find("input[type=checkbox]");
     blogPath = $("#admin").data("blogPath");
+
+    var commonmark = window.commonmark;
+    var reader = new commonmark.Parser();
+    var writer = new commonmark.HtmlRenderer({ sourcepos: true });
+
+    editControls = $("#editBox, #editPreview");
+    editPreview = $("#editPreview");
+    $(".source").on("click", function() {
+        editControls.toggleClass("showPreview");
+        if (editControls.hasClass("showPreview")) {
+            var parsed = reader.parse(txtContent.text());
+            var result = writer.render(parsed);
+            editPreview.html(result);
+        }
+    });
 
     isNew = location.pathname.replace(/\//g, "") === blogPath.replace(/\//g, "") + "postnew";
     

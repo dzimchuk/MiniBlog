@@ -24,7 +24,8 @@
     <div itemprop="articleBody">
         @if (Blog.IsEditing)
         {
-            <textarea>@Model.Content</textarea>
+            <textarea id="editBox">@Model.Content</textarea>
+            <div id="editPreview"></div>
         }
         else
         {
