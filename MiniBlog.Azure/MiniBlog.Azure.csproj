@@ -106,6 +106,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>(robocopy "$(TargetDir)." "$(SolutionDir)Website\bin" /E /XF MiniBlog.Azure.dll.config)  ^&amp; IF %25ERRORLEVEL%25 LEQ 3 exit /B 0</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

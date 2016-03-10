@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using Microsoft.ApplicationInsights;
 using MiniBlog.Contracts;
 
 internal class OptimizedImageService
@@ -17,7 +18,22 @@ internal class OptimizedImageService
 
     private void RefreshMap(object state)
     {
-        //Interlocked.Exchange(ref optimizedImageMap, mapProvider.GetMap());
+        Interlocked.Exchange(ref optimizedImageMap, GetMap());
+    }
+
+    private Dictionary<string, string> GetMap()
+    {
+        try
+        {
+            return mapProvider.GetMap();
+        }
+        catch (Exception e)
+        {
+            var telemetryClient = new TelemetryClient();
+            telemetryClient.TrackException(e);
+
+            return null;
+        }
     }
 
     public string FindOptimizedImagePath(string originalImagePath)

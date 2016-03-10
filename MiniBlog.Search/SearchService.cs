@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Net;
 using Microsoft.Azure.Search;
 using Microsoft.Azure.Search.Models;
 using MiniBlog.Contracts;
@@ -31,7 +30,7 @@ namespace MiniBlog.Search
             };
 
             var result = indexClient.Documents.Search(searchText, parameters);
-            return result.StatusCode != HttpStatusCode.OK ? null : mapper.MapFrom(result.Results);
+            return result.Results != null ? null : mapper.MapFrom(result.Results);
         }
 
         public IList<SuggestResult> Suggest(string searchText)
@@ -45,7 +44,7 @@ namespace MiniBlog.Search
             };
 
             var result = indexClient.Documents.Suggest(searchText, "sg", parameters);
-            return result.StatusCode != HttpStatusCode.OK ? null : mapper.MapFrom(result.Results);
+            return result.Results != null ? null : mapper.MapFrom(result.Results);
         }
     }
 }

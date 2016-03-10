@@ -133,7 +133,7 @@ namespace MiniBlog.BlogIndexer
         {
             await log.WriteLineAsync("Uploading posts...");
 
-            var actions = posts.Select(post => new IndexAction(post.ToDocument())).ToArray();
+            var actions = posts.Select(post => IndexAction.MergeOrUpload(post.ToDocument())).ToArray();
             try
             {
                 await searchIndexClient.IndexWithRetryAsync(actions);
@@ -142,7 +142,7 @@ namespace MiniBlog.BlogIndexer
             {
                 await log.WriteLineAsync(
                     string.Format("Failed to index some of the documents: {0}",
-                    string.Join(", ", e.IndexResponse.Results.Where(r => !r.Succeeded).Select(r => r.Key))));
+                    string.Join(", ", e.IndexingResults.Where(r => !r.Succeeded).Select(r => r.Key))));
             }
         }
 

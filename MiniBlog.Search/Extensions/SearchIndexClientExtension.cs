@@ -11,13 +11,13 @@ namespace MiniBlog.Search.Extensions
         public static Task IndexWithRetryAsync(this ISearchIndexClient client, IndexAction action)
         {
             var retryPolicy = GetRetryPolicy();
-            return retryPolicy.ExecuteAsync(() => client.Documents.IndexAsync(IndexBatch.Create(action)));
+            return retryPolicy.ExecuteAsync(() => client.Documents.IndexAsync(IndexBatch.New(new[] { action })));
         }
 
         public static Task IndexWithRetryAsync(this ISearchIndexClient client, IndexAction[] actions)
         {
             var retryPolicy = GetRetryPolicy();
-            return retryPolicy.ExecuteAsync(() => client.Documents.IndexAsync(IndexBatch.Create(actions)));
+            return retryPolicy.ExecuteAsync(() => client.Documents.IndexAsync(IndexBatch.New(actions)));
         }
 
         private static RetryPolicy GetRetryPolicy()

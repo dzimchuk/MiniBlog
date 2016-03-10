@@ -27,7 +27,7 @@ namespace MiniBlog.PostIndexer
             
             var post = postSerializer.Deserialize(stream, Path.GetFileNameWithoutExtension(message));
 
-            var action = new IndexAction(post.ToDocument());
+            var action = IndexAction.MergeOrUpload(post.ToDocument());
             await searchIndexClient.IndexWithRetryAsync(action);
 
             await log.WriteLineAsync("Done.");
@@ -38,7 +38,7 @@ namespace MiniBlog.PostIndexer
         {
             await log.WriteLineAsync($"Deleting post {message} from index...");
 
-            var action = new IndexAction(IndexActionType.Delete, new Document { { "Id", message} });
+            var action = IndexAction.Delete(new Document { { "Id", message} });
             await searchIndexClient.IndexWithRetryAsync(action);
 
             await log.WriteLineAsync("Done.");
