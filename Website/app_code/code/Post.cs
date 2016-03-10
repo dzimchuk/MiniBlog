@@ -11,8 +11,6 @@ using Util;
 public class Post
 {
     private static readonly CommonMarkSettings CustomCommonMarkSettings;
-    private string htmlContent;
-    private string content;
 
     static Post()
     {
@@ -41,16 +39,8 @@ public class Post
     public string Author { get; set; }
     public string Slug { get; set; }
     public string Excerpt { get; set; }
-    public string Content
-    {
-        get { return content; }
-        set
-        {
-            content = value;
-            htmlContent = null;
-        }
-    }
-    
+    public string Content { get; set; }
+
     public DateTimeOffset PubDate { get; set; }
     public DateTimeOffset LastModified { get; set; }
     public bool IsPublished { get; set; }
@@ -86,6 +76,6 @@ public class Post
 
     public string GetHtmlContent()
     {
-        return htmlContent ?? (htmlContent = CommonMarkConverter.Convert(Content, CustomCommonMarkSettings));
+        return CommonMarkConverter.Convert(Content, CustomCommonMarkSettings);
     }
 }
