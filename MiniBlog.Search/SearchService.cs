@@ -30,7 +30,7 @@ namespace MiniBlog.Search
             };
 
             var result = indexClient.Documents.Search(searchText, parameters);
-            return result.Results != null ? null : mapper.MapFrom(result.Results);
+            return result.Results != null ? mapper.MapFrom(result.Results) : null;
         }
 
         public IList<SuggestResult> Suggest(string searchText)
@@ -44,7 +44,7 @@ namespace MiniBlog.Search
             };
 
             var result = indexClient.Documents.Suggest(searchText, "sg", parameters);
-            return result.Results != null ? null : mapper.MapFrom(result.Results);
+            return result.Results != null ? mapper.MapFrom(result.Results) : null;
         }
     }
 }
