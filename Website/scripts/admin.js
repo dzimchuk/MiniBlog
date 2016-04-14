@@ -39,6 +39,7 @@
             excerpt: txtExcerpt.text().trim(),
             content: txtContent.text().trim(),
             categories: getPostCategories(),
+            pubDate: $("#pubDate").val(),
             __RequestVerificationToken: document.querySelector("input[name=__RequestVerificationToken]").getAttribute("value")
         })
           .success(function (data) {
@@ -146,12 +147,16 @@
         }
     });
 
+    $("#pubDate").datetimepicker({
+        format: "Y-m-d H:i"
+    });
+
     isNew = location.pathname.replace(/\//g, "") === blogPath.replace(/\//g, "") + "postnew";
     
     if (isNew) {
         editPost();
         $("#ispublished").fadeIn();
-        chkPublish[0].checked = true;
+        chkPublish[0].checked = false;
     } else if (txtTitle !== null && txtTitle.length === 1 && location.pathname.length > 1) {
         if (location.search.indexOf("mode=edit") != -1)
             editPost();

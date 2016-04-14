@@ -25,7 +25,12 @@ public class PostHandler : IHttpHandler
         }
         else if (mode == "save")
         {
-            EditPost(id, context.Request.Form["title"], context.Request.Form["excerpt"], context.Request.Form["content"], bool.Parse(context.Request.Form["isPublished"]), context.Request.Form["categories"].Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries));
+            EditPost(id, context.Request.Form["title"], 
+                context.Request.Form["excerpt"], 
+                context.Request.Form["content"], 
+                bool.Parse(context.Request.Form["isPublished"]), 
+                context.Request.Form["categories"].Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries),
+                DateTimeOffset.Parse(context.Request.Form["pubDate"]));
         }
     }
 
@@ -40,7 +45,7 @@ public class PostHandler : IHttpHandler
         SearchFacade.Delete(id);
     }
 
-    private void EditPost(string id, string title, string excerpt, string content, bool isPublished, string[] categories)
+    private void EditPost(string id, string title, string excerpt, string content, bool isPublished, string[] categories, DateTimeOffset pubDate)
     {
         Post post = storage.GetAllPosts().FirstOrDefault(p => p.ID == id);
 
@@ -50,10 +55,13 @@ public class PostHandler : IHttpHandler
             post.Excerpt = excerpt;
             post.Content = content;
             post.Categories = categories;
+            post.PubDate = pubDate;
+
+            post.LastModified = DateTimeOffset.Now.StripMilliseconds();
         }
         else
         {
-            post = new Post() { Title = title, Excerpt = excerpt, Content = content, Slug = CreateSlug(title), Categories = categories };
+            post = new Post() { Title = title, Excerpt = excerpt, Content = content, Slug = CreateSlug(title), Categories = categories, PubDate = pubDate };
             HttpContext.Current.Response.Write(post.Url);
         }
 

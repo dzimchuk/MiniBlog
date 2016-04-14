@@ -27,8 +27,8 @@ public class Post
         Title = "My new post";
         Author = ConfigurationManager.AppSettings["blog:author"];
         Content = "the content";
-        PubDate = DateTime.UtcNow;
-        LastModified = DateTime.UtcNow;
+        PubDate = DateTimeOffset.Now.StripMilliseconds();
+        LastModified = DateTimeOffset.Now.StripMilliseconds();
         Categories = new string[0];
         Comments = new List<Comment>();
         IsPublished = false;
