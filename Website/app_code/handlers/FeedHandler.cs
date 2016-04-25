@@ -36,10 +36,10 @@ public class FeedHandler : IHttpHandler
                        {
                            Id = p.AbsoluteUrl.ToString(),
                            Title = new TextSyndicationContent(p.Title),
-                           Content = new TextSyndicationContent(p.Content, TextSyndicationContentKind.Html),
+                           Content = new TextSyndicationContent(p.GetHtmlContent(), TextSyndicationContentKind.Html),
                            LastUpdatedTime = p.LastModified,
                            PublishDate = p.PubDate,
-                           Summary = new TextSyndicationContent(p.Content, TextSyndicationContentKind.Html)
+                           Summary = new TextSyndicationContent(p.GetHtmlContent(), TextSyndicationContentKind.Html)
                        };
 
             item.Links.Add(SyndicationLink.CreateAlternateLink(p.AbsoluteUrl));
